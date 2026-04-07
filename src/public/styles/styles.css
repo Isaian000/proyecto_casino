@@ -1,0 +1,251 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(15, 15, 15);
+}
+
+/* Navigation var styles */
+
+#nav-bar{
+    width: 100%;
+    height: 72px;
+    background-color: rgb(40, 40, 40);
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border: none;
+    box-shadow: 0px 10px 30px -18px rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+
+}
+
+#log-bttns{
+    
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+#casino_logo{
+    margin-right: auto; 
+    margin-left: 20px;
+    margin-top: 10px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    align-items: center;
+    text-decoration: none;
+
+}
+
+#search{
+    width: 250px;
+    margin: auto;
+    margin-right: 700px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(213, 216, 224);
+}
+
+#search:hover{
+    box-shadow: 0 0 5px rgba(145, 145, 145, 0.8);
+    outline: none;
+}
+
+
+#log-in-bttn{
+    background-color: rgb(179, 179, 179);
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    text-decoration: none;
+    margin-right: 5px;
+
+}
+
+
+#log-in-bttn:hover{
+    background-color: rgb(162, 162, 162);
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    text-decoration: none;
+    margin-right: 5px;
+
+}
+
+
+#sign-in-bttn{
+    background-color: rgb(255, 208, 0);
+    border-radius: 5px;
+    color: rgb(28, 28, 28);
+    padding: 10px;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid transparent;
+}
+
+#sign-in-bttn:hover{
+    background-color: rgb(236, 192, 0);
+    border-radius: 5px;
+    color: rgb(28, 28, 28);
+    padding: 10px;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+/* Modal de cierre de sesion styles */
+
+
+.btn-custom{   /* boton de aceotar */
+    background-color: rgb(255, 208, 0);
+    color: rgb(28, 28, 28);
+}
+
+.btn-custom:hover{
+    background-color: rgb(227, 186, 0);
+}
+
+.modal-content{ /* contenedor del modal */
+    background-color: rgb(28, 28, 28);
+}
+
+.modal-header{   /* titulo */
+    color: rgb(255, 208, 0);
+    font-size: large;
+}
+
+.modal-body{   /* texto */
+    color: rgb(221, 221, 221);
+    font-size:larger;
+}
+
+
+
+/* Selector de juegos styles */
+
+#game_selector{
+    width: 100%;
+    height: 50px;
+    background-color: rgb(255, 208, 0);
+    padding: 12px;
+}
+
+.games_selector{
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 40px;
+}
+
+#bj_selector{
+
+}
+
+#poker_selector{
+    
+}
+
+#ruleta_selector{
+    
+}
+
+
+
+
+#games_container{
+    width: 800px;
+    height: 600px;
+    background-color: rgb(255, 255, 255);
+    margin: auto;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    margin-top: 30px;
+    padding: 0;
+}
+
+
+#bj_game{
+    width: 48%;
+    height: 50%;
+    border-radius: 15px;
+    margin: auto;
+}
+
+#bj_game:hover{
+    width: 48%;
+    height: 50%;
+    border-radius: 15px;
+    margin: auto;
+
+}
+
+#poker_game{
+    width: 48%;
+    height: 50%;
+    border-radius: 15px;
+    margin: auto;
+    margin-left: 52%;
+    margin-top: -50%;
+
+}
+
+#poker_game:hover{
+    width: 48%;
+    height: 50%;
+    border-radius: 15px;
+    margin: auto;
+    margin-left: 52%;
+    margin-top: -50%;
+
+}
+
+
+
+
+#ruleta_game{
+    width: 48%;
+    height: 50%;
+    border-radius: 15px;
+    margin: auto;
+
+
+
+}
+
+#ruleta_game:hover{
+    width: 48%;
+    height: 50%;
+    border-radius: 15px;
+    margin: auto;
+
+
+
+}
+
+ 
+#baccarat_game{
+    width: 48%;
+    height: 50%;
+    margin: auto;
+    margin-left: 52%;
+    border-radius: 15px;
+
+
+
+}
+
+#baccarat_game:hover{
+    width: 48%;
+    height: 50%;
+    margin: auto;
+    margin-left: 52%;
+    border-radius: 15px;
+
+}
