@@ -14,29 +14,34 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../public/styles/styles.css">
-    
+
 
 </head>
 <body>
+
+    <!-- Nav-var -->
     <header>
-        <div id="nav-bar">
-            <a href="/" id="casino_logo">
-                <p class=""> Casino en linea</p>
-            </a>
-            <div>
-                <input type="search" id="search" placeholder="Buscar...">
+        <nav>
+            <div id="nav-bar">
+                <a href="/" id="casino_logo">Home</a>
+                <div>
+                    <input type="search" id="search" placeholder="Buscar...">
+                </div>
+                <div id="log-bttns">
+                    <a id="log-in-bttn" href="./login.html">Iniciar sesión</a>
+                    <a id="sign-in-bttn" href="./sigin.html">Registrarse</a>
+                    <a class="nav-link cerrars" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt ms-2" style="color: white;" title="Cerrar sesion"></i>
+                    </a>
+                </div>
             </div>
-            <div id="log-bttns">
-                <a id="log-in-bttn" href="/login">Iniciar sesión</a>
-                <a id="sign-in-bttn" href="/register">Registrarse</a>
-                <a class="nav-link cerrars" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                    <i class="fas fa-sign-out-alt ms-2" style="color: white;" title="Cerrar sesion"></i>
-                </a>
-            </div>
-        </div>
+        </nav>
     </header>
+
     <main>
 
+
+    <!-- Modal para cerrar sesion -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
