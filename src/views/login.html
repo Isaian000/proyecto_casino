@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesion</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/log_in.css">
+</head>
+<body>
+    <header>
+        <div id="nav-bar">
+            <a href="/" id="casino_logo">
+                <p class=""> Casino en linea</p>
+            </a>
+            <div id="log-bttns">
+                <a id="sign-in-bttn" href="/register">Registrarse</a>
+            </div>
+        </div>
+    </header>
+
+    <div id="log_in_form">
+        <h2>Bienvenido de nuevo</h2>
+        <form action="" method="post">
+            <input type="email" placeholder="Email" id="email_input" class="input" required>
+            <input type="password" placeholder="Contraseña" id="password_input" class="input" required>
+            <a href="" id="reset_password" class="resetPassword">¿Olvidaste tu contraseña?</a>
+
+            <div id="submit_container">
+                <input type="submit" value="Acceder" id="submit_login">
+            </div>
+
+            <input type="button" value="Iniciar sesion con Google" id="google_login">
+        </form>
+    </div>
+    
+</body>
+</html>
