@@ -1,7 +1,7 @@
 {
   "name": "proyecto_casino",
   "version": "1.0.0",
-  "description": "",
+  "description": "Servidor HTTP desarrollado con Node.js, Express y TypeScript, conectado a MongoDB Atlas. Actualmente cuenta con la configuración base del servidor y la conexión a base de datos. Próximamente se implementarán los juegos de 21 y ruleta.",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
