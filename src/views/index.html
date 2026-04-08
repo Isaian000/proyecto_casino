@@ -20,18 +20,32 @@
 
     <!-- Nav-var -->
     <header>
-        <nav>
-            <div id="nav-bar">
-                <a href="/" id="casino_logo">Home</a>
-                <div>
-                    <input type="search" id="search" placeholder="Buscar...">
+        <nav class="navbar_section">
+            <div class="navbar_container">
+                <div class="container--items">
+                    <div class="item--logo">
+                        <a href="/" class="casino_logo">Home</a>
+                    </div>
+
+                    <div class="item--search">
+                        <input type="search" id="search" class="search--input" placeholder="Buscar...">
+                    </div>
                 </div>
-                <div id="log-bttns">
-                    <a id="log-in-bttn" href="/login.html">Iniciar sesión</a>
-                    <a id="sign-in-bttn" href="/sigin.html">Registrarse</a>
-                    <a class="nav-link cerrars" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                        <i class="fas fa-sign-out-alt ms-2" style="color: white;" title="Cerrar sesion"></i>
-                    </a>
+        
+                <div class="container_logs">
+                    <ul class="list--items">
+                        <li class="item--bttns">
+                            <a class="bttn login--bttn" href="/login.html">Iniciar sesión</a>
+                        </li>
+                        <li class="item--bttns">
+                            <a class="bttn signin--bttn" href="/sigin.html">Registrarse</a>
+                        </li>
+                        <li class="item--bttns">
+                            <a class="nav-link cerrars" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt ms-2" style="color: white;" title="Cerrar sesion"></i>
+                            </a>
+                        </li> 
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -68,20 +82,7 @@
             -->
     </div>
 
-    <div id="games_container">
-        <div>
-            <img src="/src/img/blackjack.jpeg" alt="" id="bj_game">
-        </div>
-        <div>
-            <img src="/src/img/poker.jpeg" alt="" id="poker_game">
-        </div>
-        <div>
-            <img src="/src/img/ruleta.jpg" alt="" id="ruleta_game">
-        </div>
-        <div>
-            <img src="/src/img/baccarat.jpg" alt="" id="baccarat_game">
-        </div>
-    </div>
+    
 
     </main>
         <footer>

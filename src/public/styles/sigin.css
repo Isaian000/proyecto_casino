@@ -6,59 +6,57 @@ body {
 
 /* Navigation var styles */
 
-#nav-bar{
-    width: 100%;
-    height: 72px;
-    background-color: rgb(28, 28, 28);
+.navbar_section {
+    background-color: rgb(0, 0, 0);
+    padding: 0;
+    margin: 0;
 
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    box-shadow: 0px 10px 30px -18px rgba(0, 0, 0, 0.7);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+
 }
 
-#log-bttns{
+.navbar_container {
+    padding: 20px;
     display: flex;
-    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.item--logo {
+    display: flex;
     align-items: center;
 }
 
-
-
-#casino_logo{
-    margin-right: auto; 
-    margin-left: 20px;
-    margin-top: 10px;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    align-items: center;
+.casino_logo {
     text-decoration: none;
+    color: whitesmoke;
+    font-weight: bolder;
+    font-size: 26px;
+}
 
+.container_logs {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 
-#log-in-bttn{
-    margin-right: 40px;
+.login--bttn {
     background-color: rgb(255, 208, 0);
-    font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    color: rgb(28, 28, 28);
-    padding: 10px;
     text-decoration: none;
+    color: rgb(28, 28, 28);
 
+    border: none;
+    border-radius: 20px;
+
+    padding: 10px 20px;
+
+    
 }
 
-#log-in-bttn:hover{
-    margin-right: 40px;
-    background-color: rgb(28, 28, 28);
-    border-radius: 5px;
-    color: rgb(255, 208, 0);
-    padding: 10px;
-    border-color: rgb(255, 208, 0);
-}
+
 
 
 /* Sign in styles */

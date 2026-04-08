@@ -6,95 +6,103 @@ body {
 
 /* Styles for: nav-var */
 
-#nav-bar{
-    width: 100%;
-    height: 72px;
-    background-color: rgb(40, 40, 40);
-
+.navbar_container {
+    padding: 20px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    border: none;
-    box-shadow: 0px 10px 30px -18px rgba(0, 0, 0, 0.7);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-#log-bttns{
-    
+.container--items {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 1rem;
+}
+
+.item--logo {
+    display: flex;
     align-items: center;
 }
 
-#casino_logo{
-    margin-right: auto; 
-    margin-left: 20px;
-    margin-top: 10px;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    align-items: center;
-    text-decoration: none;
-
+.item--search {
+    margin-left: auto;
 }
 
-#search{
-    width: 250px;
-    margin: auto;
-    margin-right: 700px;
-    padding: 5px;
-    border-radius: 5px;
+.search--input {
+    width: 240px;
+    padding: 8px 12px;
+    border-radius: 20px;
     border: none;
-    border-radius: 10px;
-    background-color: rgb(213, 216, 224);
-}
-
-#search:hover{
-    box-shadow: 0 0 5px rgba(145, 145, 145, 0.8);
     outline: none;
 }
 
-
-#log-in-bttn{
-    background-color: rgb(179, 179, 179);
-    border-radius: 5px;
-    color: rgb(255, 255, 255);
-    padding: 10px;
+.casino_logo {
     text-decoration: none;
-    margin-right: 5px;
-
+    color: whitesmoke;
+    font-weight: bolder;
+    font-size: 26px;
 }
 
 
-#log-in-bttn:hover{
-    background-color: rgb(162, 162, 162);
-    border-radius: 5px;
-    color: rgb(255, 255, 255);
-    padding: 10px;
-    text-decoration: none;
-    margin-right: 5px;
+.item--search {
+    
+}
+
+.search--input {
+    background-color: rgb(221, 221, 221);
+    border: none;
+    border-radius: 20px;
+}
+
+.item--search {
+    display: inline-block;
+}
+
+.container_logs {
+    display: inline-block;
 
 }
 
+.list--items {
+    margin: 0;
+    padding: 0;
+}
 
-#sign-in-bttn{
+.item--bttns {
+    display: inline-block;
+
+    margin: 0 5px;
+
+    font-size: 12px;
+
+}
+
+.bttn {
+    text-decoration: none;
+    background-color: grey;
+    color: white;
+    border-radius: 15px;
+
+    padding: 10px 20px;
+}
+
+.bttn:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+.signin--bttn {
     background-color: rgb(255, 208, 0);
-    border-radius: 5px;
-    color: rgb(28, 28, 28);
-    padding: 10px;
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid transparent;
+    color: rgb(0, 0, 0);
 }
 
-#sign-in-bttn:hover{
-    background-color: rgb(236, 192, 0);
-    border-radius: 5px;
-    color: rgb(28, 28, 28);
-    padding: 10px;
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
+.signin--bttn:hover {
+    background-color: rgb(28, 28, 28);
+    color: rgb(255, 208, 0);
+    border: 1px solid rgb(255, 208, 0);
 }
 
 
