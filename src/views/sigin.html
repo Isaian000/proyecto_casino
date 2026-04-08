@@ -28,95 +28,113 @@
     </header>
 
     
-    <div id="sign_in_form">
-        <div id="title">
-            <h2>Registrate gratis</h2>
-            <form action="" method="post">
-                <input type="text" name="" id="name_input" placeholder="Nombre(s)" class="input" required>
-                <input type="text" name="" id="second_name_input" placeholder="Apellidos" class="input" required>
-                <input type="email" id="email_input" placeholder="Email" class="input" required>
-                <div id="birthdate_container">
-                    <select name="" id="day_select" required>
-                        <option value="">Dia</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">1</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                    </select>
-
-                    <select name="" id="month_select" required>
-                        <option value="">Mes</option>
-                        <option value="1">Enero</option>
-                        <option value="2">Febrero</option>
-                        <option value="3">Marzo</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Mayo</option>
-                        <option value="6">Junio</option>
-                        <option value="7">Julio</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Septiembre</option>
-                        <option value="10">Octubre</option>
-                        <option value="11">Noviembre</option>
-                        <option value="12">Diciembre</option>
-                    </select>
-
-                    <select name="" id="year_select" required>
-                        <option value="">Año</option>
-                        <option value="1">2008</option>
-                        <option value="2">2007</option>
-                        <option value="3">2006</option>
-                        <option value="4">2005</option>
-                        <option value="5">2004</option>
-                        <option value="6">2003</option>
-                        <option value="7">2002</option>
-                        <option value="8">2001</option>
-                        <option value="9">2000</option>
-                        <option value="10">1999</option>
-                        <option value="11">1998</option>
-                        <option value="12">1997</option>
-                        <option value="13">1996</option>
-                        <option value="14">1995</option>
-                        <option value="15">1994</option>
-                        <option value="16">1993</option>
-                        <option value="17">1992</option>
-                        <option value="18">1991</option>
-                    </select>
-
-
+    <div class="form_container">
+        <h2>Registrate gratis</h2>
+        <form action="" method="post">
+            <div class="items--container name--container">
+                <div class="first_name--container">
+                    <label for="name" class="item--label">Nombre</label>
+                    <input type="text" name="name" id="name" class="name--input" placeholder="Nombre(s)" class="input" required>
                 </div>
-                <input type="text" id="phone_input" placeholder="Número de telefono" class="input" required>
-                <input type="password" name="" id="password_input" placeholder="Contraseña" class="input" required>
-                <input type="submit" value="Registrarse" id="submit_signin">
-                <a href="https://www.google.com/?hl=es_419" class="btn btn-custom" target="_blank">Acceder con Google</a>
-            </form>
-        </div>
+                <div class="last_name--container">
+                    <label for="last_name" class="item--label">Apellidos</label>
+                    <input type="text" name="last_name" id="last_name" class="name--input" placeholder="Apellidos" class="input" required>
+                </div>
+            </div>
+            
+            <div class="items--container">
+                <label for="email" class="item--label">Email</label>
+                <input type="email" name="email" id="email" class="input" placeholder="Email" required>
+            </div>
+
+            <div class="birthdate_container">
+                <label for="" class="item--label">Fecha de Nacimiento</label>
+                <select name="" id="day_select" class="date--input day--input" required>
+                    <option value="">Dia</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">1</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+                <select name="" id="month_select" class="date--input month--input" required>
+                    <option value="">Mes</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+                <select name="" id="year_select" class="date--input year--input" required>
+                    <option value="">Año</option>
+                    <option value="1">2008</option>
+                    <option value="2">2007</option>
+                    <option value="3">2006</option>
+                    <option value="4">2005</option>
+                    <option value="5">2004</option>
+                    <option value="6">2003</option>
+                    <option value="7">2002</option>
+                    <option value="8">2001</option>
+                    <option value="9">2000</option>
+                    <option value="10">1999</option>
+                    <option value="11">1998</option>
+                    <option value="12">1997</option>
+                    <option value="13">1996</option>
+                    <option value="14">1995</option>
+                    <option value="15">1994</option>
+                    <option value="16">1993</option>
+                    <option value="17">1992</option>
+                    <option value="18">1991</option>
+                </select>
+            </div>
+            <div class="items--container">
+                <label for="phone_number" class="item--label">Número de telefono</label>
+                <input type="text" id="phone_number" name="phone_number" class="input" placeholder="Número de telefono" required>
+            </div>
+            <div class="items--container">
+                <label for="password" class="item--label">Password</label>
+                <input type="password" name="password" id="password" class="input" placeholder="Contraseña" class="input" required>
+            </div>
+            <div class="items--container">
+                <input type="submit" value="Registrarse" id="submit" class="submit--item">
+            </div>
+            <div class="items--cotainer">
+                <a href="https://www.google.com/?hl=es_419" class="google-bttn" target="_blank">Acceder con <span>Google</span></a>
+            </div>
+        </form>
     </div>
 
     <script src="./registro.js"></script>
