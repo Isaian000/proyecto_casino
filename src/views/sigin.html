@@ -33,7 +33,7 @@
     
     <div class="form_container">
         <h2>Registrate gratis</h2>
-        <form action="" method="post">
+        <form action="/api/auth/register" method="post">
             <div class="items--container name--container">
                 <div class="first_name--container">
                     <label for="name" class="item--label">Nombre</label>
@@ -52,7 +52,7 @@
 
             <div class="birthdate_container">
                 <label for="" class="item--label">Fecha de Nacimiento</label>
-                <select name="" id="day_select" class="date--input day--input" required>
+                <select name="day" id="day_select" class="date--input day--input" required>
                     <option value="">Dia</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -86,7 +86,7 @@
                     <option value="30">30</option>
                     <option value="31">31</option>
                 </select>
-                <select name="" id="month_select" class="date--input month--input" required>
+                <select name="month" id="month_select" class="date--input month--input" required>
                     <option value="">Mes</option>
                     <option value="1">Enero</option>
                     <option value="2">Febrero</option>
@@ -101,7 +101,7 @@
                     <option value="11">Noviembre</option>
                     <option value="12">Diciembre</option>
                 </select>
-                <select name="" id="year_select" class="date--input year--input" required>
+                <select name="year" id="year_select" class="date--input year--input" required>
                     <option value="">Año</option>
                     <option value="1">2008</option>
                     <option value="2">2007</option>

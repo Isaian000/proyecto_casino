@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/Isaian000/proyecto_casino#readme",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
     "express": "^5.2.1",
     "mongoose": "^9.3.1"
   },
