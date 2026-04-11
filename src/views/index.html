@@ -67,7 +67,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a href="index.html" class="btn btn-custom">Aceptar</a>
+                <button id="logoutBtn" class="btn btn-custom">Aceptar</button>
               </div>
             </div>
             </div>
@@ -100,5 +100,17 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+        <script>
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        // Limpiar TODO el localStorage
+        localStorage.clear();
+
+        // O si solo guardas el usuario:
+        // localStorage.removeItem("usuario");
+
+        // Redirigir al home
+        window.location.href = "/index.html";
+    });
+</script>
 </body>
 </html>

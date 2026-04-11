@@ -34,7 +34,7 @@
 
     <div class="log_in_container">
         <h2>Iniciar Sesion</h2>
-        <form action="" method="post" class="log_in_form">
+        <form class="log_in_form">
             <div class="input_container">
                 <label class="item--label" for="email">Email</label>
                 <input class="item--input" type="email" placeholder="Email" name="email" id="email" required>
@@ -55,6 +55,39 @@
     
         </form>
     </div>
+    <script>
+document.querySelector('.log_in_form').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            // Guardar usuario en localStorage
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            alert('Login exitoso');
+
+            window.location.href = '/';
+        }else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert('Error al iniciar sesión');
+    }
+});
+</script>
 </body>
 </html>
