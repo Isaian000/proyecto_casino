@@ -21,7 +21,6 @@ const userSchema =  new Schema(
         phone_number: { type: String, required: true, trim: true },
         password: { type: String, required: true, minLength: 6 },
         bank: { type: Number, default: 0, min: 0}
-        
     },
     {timestamps: true}
 );

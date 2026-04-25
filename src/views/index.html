@@ -41,6 +41,9 @@
                             <a class="bttn signin--bttn" href="/sigin.html">Registrarse</a>
                         </li>
                         <li class="item--bttns">
+                            <button id="deleteAccountBtn" class="bttn delete--bttn" data-bs-toggle="modal" data-bs-target="#deleteModal" style="display:none">Eliminar cuenta</button>
+                        </li>
+                        <li class="item--bttns">
                             <a class="nav-link cerrars" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt ms-2" style="color: white;" title="Cerrar sesion"></i>
                             </a>
@@ -72,9 +75,33 @@
             </div>
             </div>
         </div>
+        </div>
+    
+    <!-- Modal para eliminar cuenta -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Para eliminar tu cuenta, por favor ingresa tu contraseña para confirmar.</p>
+                    <div class="mb-3">
+                        <label for="deletePassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="deletePassword" placeholder="Contraseña">
+                        <div id="deleteError" class="text-danger mt-2" style="display:none"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="confirmDeleteBtn" class="btn btn-danger">Eliminar cuenta</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="game_selector">
+        <div id="game_selector">
             <!-- 
             <a href="/views/blackjack.html" class="games_selector" id="bj_selector">Blackjack</a>
             <a href="/views/poker.html" class="games_selector" id="poker_selector">Poker</a>
@@ -86,9 +113,9 @@
 
     </main>
         <footer>
-            <!-- place footer here -->
+            
         </footer>
-        <!-- Bootstrap JavaScript Libraries -->
+        
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -100,17 +127,7 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
-        <script>
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-        // Limpiar TODO el localStorage
-        localStorage.clear();
 
-        // O si solo guardas el usuario:
-        // localStorage.removeItem("usuario");
-
-        // Redirigir al home
-        window.location.href = "/index.html";
-    });
-</script>
+        <script src="/deleteAccount.js"></script>
 </body>
 </html>
