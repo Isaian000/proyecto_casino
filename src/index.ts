@@ -1,32 +1,97 @@
 import express from 'express';
+import http from 'http';
 import path from 'path';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+
+import { env } from './config/env';
 import connectDB from './config/db';
-import authRoutes from './routes/auth.routes'
+import passport, { configurePassport } from './config/passport';
+import { initLobbies } from './controllers/lobby.controller';
+import { initSocket } from './sockets';
+
+import authRoutes from './routes/auth.routes';
+import friendRoutes from './routes/friend.routes';
+import walletRoutes from './routes/wallet.routes';
+import lobbyRoutes from './routes/lobby.routes';
+import userRoutes from './routes/user.routes';
+import exchangeRoutes from './routes/exchange.routes';
 
 const app = express();
-const PORT = process.env.PORT || 3000
+const PORT = env.PORT;
 
-connectDB();
+// Inicializa la BD y, una vez conectada, asegura las mesas (lobbies) base.
+connectDB().then(() => {
+    initLobbies().catch((e) => console.error('Error inicializando lobbies:', e));
+});
+configurePassport();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))) // rutas para los estilos e imagenes dentro de 'public/styles'
-app.use(express.static(path.join(__dirname, 'views'))) // rutas para servir archivos '.html' dentro de 'views'
+app.use(cookieParser());
+app.use(
+    session({
+        secret: env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60 * 1000 },
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use('/api/auth', authRoutes)
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views')));
+// Alias para que las rutas tipo /views/utils.js usadas en los HTML resuelvan
+// correctamente y los scripts del frontend se carguen en el navegador.
+app.use('/views', express.static(path.join(__dirname, 'views')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+// API
+app.use('/api/auth', authRoutes);
+app.use('/api/friends', friendRoutes);
+app.use('/api/wallet', walletRoutes);
+app.use('/api/lobbies', lobbyRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/exchange', exchangeRoutes);
+
+// Vistas
+app.get('/', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+app.get('/login', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+app.get('/register', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'sigin.html'));
+});
+app.get('/perfil', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'perfil.html'));
+});
+app.get('/mesas', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'mesas.html'));
+});
+app.get('/blackjack', (_req, res) => {
+    // Estructura preparada; logica del juego en el siguiente sprint.
+    res.sendFile(path.join(__dirname, 'views', 'blackjack.html'));
+});
+app.get('/ruleta', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'ruleta.html'));
 });
 
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'login.html'));
+// 404 para API
+app.use('/api', (_req, res) => {
+    res.status(404).json({ message: 'Ruta no encontrada' });
 });
 
-app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'sigin.html'));
+// 404 para vistas
+app.use((_req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost: ${PORT}`);
+const httpServer = http.createServer(app);
+initSocket(httpServer);
+
+httpServer.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Socket.io escuchando en ws://localhost:${PORT}`);
 });
