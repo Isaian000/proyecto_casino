@@ -20,3 +20,6 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+# Subidas locales
+uploads/
