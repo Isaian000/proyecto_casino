@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import User from '../models/user';
-import Transaction, { TransactionType } from '../models/transaction';
+import Transaction, { TransactionType } from '../models/transactions';
 
 /**
  * Operacion atomica de actualizacion de saldo.

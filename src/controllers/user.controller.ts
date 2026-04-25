@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/user';
-import Transaction from '../models/transaction';
+import Transaction from '../models/transactions';
 
 /**
  * PATCH /api/users/me/password

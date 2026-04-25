@@ -8,7 +8,7 @@ import {
     registerWin,
     listTransactions,
 } from '../controllers/wallet.controller';
-import Transaction from '../models/transaction';
+import Transaction from '../models/transactions';
 
 const router = Router();
 
