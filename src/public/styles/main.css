@@ -1,0 +1,300 @@
+/* =============================================
+   GLOBAL
+============================================= */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(15, 15, 15);
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+}
+
+/* =============================================
+   NAVBAR
+============================================= */
+#nav-bar {
+    width: 100%;
+    height: 72px;
+    background-color: rgb(28, 28, 28);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 24px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#casino_logo {
+    margin-right: auto;
+    color: white;
+    font-size: 20px;
+    font-weight: 900;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+#log-bttns {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#log-in-bttn {
+    background-color: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    color: rgb(255, 255, 255);
+    padding: 8px 18px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+#log-in-bttn:hover {
+    border-color: #ffd000;
+    color: #ffd000;
+}
+
+#sign-in-bttn {
+    background-color: rgb(255, 208, 0);
+    border-radius: 6px;
+    color: rgb(20, 20, 20);
+    padding: 8px 18px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+#sign-in-bttn:hover {
+    background-color: rgb(230, 188, 0);
+}
+
+/* Avatar circular en navbar */
+#user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #ffd000;
+    color: #1a1a1a;
+    font-weight: 900;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+}
+#user-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 3px rgba(255,208,0,0.3);
+    border-color: #ffd000;
+}
+
+/* =============================================
+   MODAL LOGOUT
+============================================= */
+.btn-custom {
+    background-color: rgb(255, 208, 0);
+    color: rgb(28, 28, 28);
+    font-weight: 700;
+}
+.btn-custom:hover { background-color: rgb(220, 178, 0); }
+
+.modal-content { background-color: rgb(28, 28, 28); }
+.modal-header  { color: rgb(255, 208, 0); border-bottom: 1px solid rgba(255,208,0,0.2); }
+.modal-footer  { border-top: 1px solid rgba(255,255,255,0.08); }
+.modal-body    { color: rgb(221, 221, 221); font-size: 16px; }
+
+/* =============================================
+   HERO
+============================================= */
+#hero {
+    min-height: 420px;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1200 50%, #0d0d0d 100%);
+    border-bottom: 1px solid rgba(212,175,55,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,208,0,0.07) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+#hero-content { max-width: 560px; z-index: 1; }
+
+#hero-sub {
+    color: #ffd000;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+#hero-title {
+    color: white;
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+#hero-highlight { color: #ffd000; }
+
+#hero-desc {
+    color: rgba(255,255,255,0.6);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+#hero-cta {
+    background-color: #ffd000;
+    color: #111;
+    padding: 14px 36px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    display: inline-block;
+}
+#hero-cta:hover {
+    background-color: #e6bb00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,208,0,0.25);
+}
+
+/* Cartas flotantes decorativas */
+#hero-cards {
+    display: flex;
+    gap: 16px;
+    z-index: 1;
+}
+.floating-card {
+    font-size: 80px;
+    opacity: 0.15;
+    animation: floatCard 4s ease-in-out infinite;
+    user-select: none;
+}
+#card2 { animation-delay: 0.8s; opacity: 0.1; }
+#card3 { animation-delay: 1.6s; opacity: 0.07; }
+
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-16px); }
+}
+
+/* =============================================
+   BARRA DE JUEGOS
+============================================= */
+#game_selector {
+    width: 100%;
+    background-color: #ffd000;
+    padding: 12px 80px;
+    display: flex;
+    gap: 32px;
+}
+.games_selector {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.7);
+    transition: color 0.2s;
+}
+.games_selector:hover { color: rgba(0,0,0,1); }
+
+/* =============================================
+   CARDS DE JUEGOS
+============================================= */
+#games_container {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    padding: 50px 80px;
+    flex-wrap: wrap;
+}
+
+.game-card {
+    width: 340px;
+    background-color: #1c1c1c;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+}
+.game-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,208,0,0.2);
+}
+
+.game-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.game-info {
+    padding: 20px 22px 24px;
+}
+.game-title {
+    color: white;
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+.game-desc {
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+.game-btn {
+    display: inline-block;
+    background-color: #ffd000;
+    color: #111;
+    padding: 9px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+.game-btn:hover {
+    background-color: #e6bb00;
+    color: #111;
+}
+
+/* =============================================
+   FOOTER
+============================================= */
+#site-footer {
+    text-align: center;
+    padding: 24px;
+    color: rgba(255,255,255,0.2);
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 20px;
+}
+
+/* Fix global: saldo siempre dorado en navbar */
+#saldo-display {
+    color: #ffd000 !important;
+    font-weight: 800 !important;
+    font-size: 15px;
+}
