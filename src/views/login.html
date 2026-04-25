@@ -3,91 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesion</title>
+    <title>Log in</title>   
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/styles/login.css">
+    <link rel="stylesheet" href="/styles/log_in.css">
+
+    
+
+    
+
 </head>
+
+
 <body>
     <header>
-        <nav class="navbar_section">
-            <div class="navbar_container">
-                <div class="container--items">
-                    <div class="item--logo">
-                        <a href="/" class="casino_logo">Home</a>
-                    </div>
-                </div>
-        
-                <div class="container_logs">
-                    <ul class="list--items">
-                        <li class="item--bttns">
-                            <a class="bttn signin--bttn" href="/sigin.html">Registrarse</a>
-                        </li>
-                    </ul>
+            <div id="nav-bar">
+                <a href="/" id="casino_logo">
+                    <p class=""> Casino en linea</p>
+                </a>
+                <div id="log-bttns">
+                    <a id="sign-in-bttn" href="/register">Registrarse</a>
                 </div>
             </div>
-        </nav>
-    </header>
+        </header>
 
-    <div class="log_in_container">
-        <h2>Iniciar Sesion</h2>
-        <form class="log_in_form">
-            <div class="input_container">
-                <label class="item--label" for="email">Email</label>
-                <input class="item--input" type="email" placeholder="Email" name="email" id="email" required>
-            </div>
-            <div class="input_container">
-                <label class="item--label" for="password">Contraseña</label>
-                <input class="item--input" type="password" placeholder="Contraseña" name="password" id="password" required>
-            </div>
-
+    <div id="log_in_form">
+        <h2>Bienvenido de nuevo</h2>
+        <form id="logForm">
+            <input type="email" placeholder="Email" id="email_input" class="input" required>
+            <input type="password" placeholder="Contraseña" id="password_input" class="input" required>
             <a href="" id="reset_password" class="resetPassword">¿Olvidaste tu contraseña?</a>
 
-            <div class="submit_container">
-                <input type="submit" value="Acceder" class="submit_login">
+            <div id="submit_container">
+                <input type="submit" value="Acceder" id="submit_login">
             </div>
-            <div class="google_container">
-                <a class="google--bttn" href="">Inicia sesion con <span>Google</span></a>
-            </div>
-    
+
+            <input type="button" value="Iniciar sesion con Google" id="google_login">
         </form>
     </div>
-    <script>
-document.querySelector('.log_in_form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    try {
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-            // Guardar usuario en localStorage
-            localStorage.setItem('user', JSON.stringify(data.user));
-
-            alert('Login exitoso');
-
-            window.location.href = '/';
-        }else {
-            alert(data.message);
-        }
-
-    } catch (error) {
-        console.error(error);
-        alert('Error al iniciar sesión');
-    }
-});
-</script>
+    
 </body>
+<script src="/views/utils.js"></script>
+<script src="/views/login.js"></script>
 </html>

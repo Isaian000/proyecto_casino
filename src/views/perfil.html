@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+<head>
+    <title>Mi Perfil · Casino en Linea</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/perfil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div id="nav-bar">
+            <a href="/" id="casino_logo">Casino en linea</a>
+            <div id="log-bttns">
+                <div id="user-zone" style="display:none; align-items:center; gap:14px;">
+                    <span id="saldo-display"></span>
+                    <a href="/perfil" id="user-avatar" title="Ver perfil"></a>
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt" style="color:rgba(255,255,255,0.6); font-size:18px;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">Cerrar sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">¿Seguro que deseas cerrar sesión?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-custom" id="confirm-logout">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div id="perfil-container">
+
+            <!-- Avatar + nombre -->
+            <div id="perfil-avatar-wrap">
+                <div id="perfil-avatar-big"></div>
+                <h2 id="perfil-nombre-completo"></h2>
+                <p id="perfil-email-sub"></p>
+                <div id="perfil-acciones-rapidas">
+                    <button class="btn-accion" data-target="seccion-editar">
+                        <i class="fas fa-edit"></i> Editar perfil
+                    </button>
+                    <button class="btn-accion" data-target="seccion-password">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </button>
+                    <button class="btn-accion btn-accion-danger" data-target="seccion-eliminar">
+                        <i class="fas fa-trash"></i> Eliminar cuenta
+                    </button>
+                </div>
+            </div>
+
+            <!-- Editar perfil — aparece justo aquí debajo de los botones -->
+            <div id="seccion-editar" class="seccion-crud oculto">
+                <div class="crud-header">
+                    <h3 class="seccion-titulo"><i class="fas fa-edit"></i> Editar perfil</h3>
+                    <button class="btn-cerrar-crud" title="Cerrar"><i class="fas fa-times"></i></button>
+                </div>
+                <form id="form-editar" class="crud-form">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Nombres</label>
+                            <input type="text" id="edit-nombres" class="crud-input" required minlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Apellidos</label>
+                            <input type="text" id="edit-apellidos" class="crud-input" required minlength="2">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" id="edit-telefono" class="crud-input" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-gold-perfil">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Cambiar contraseña -->
+            <div id="seccion-password" class="seccion-crud oculto">
+                <div class="crud-header">
+                    <h3 class="seccion-titulo"><i class="fas fa-lock"></i> Cambiar contraseña</h3>
+                    <button class="btn-cerrar-crud" title="Cerrar"><i class="fas fa-times"></i></button>
+                </div>
+                <form id="form-password" class="crud-form">
+                    <div class="form-group">
+                        <label>Contraseña actual</label>
+                        <div class="input-pass-wrap">
+                            <input type="password" id="pass-actual" class="crud-input" required>
+                            <button type="button" class="toggle-pass" data-input="pass-actual"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva contraseña</label>
+                        <div class="input-pass-wrap">
+                            <input type="password" id="pass-nueva" class="crud-input" minlength="6" required>
+                            <button type="button" class="toggle-pass" data-input="pass-nueva"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar nueva contraseña</label>
+                        <div class="input-pass-wrap">
+                            <input type="password" id="pass-confirma" class="crud-input" required>
+                            <button type="button" class="toggle-pass" data-input="pass-confirma"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-gold-perfil">Actualizar contraseña</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Eliminar cuenta -->
+            <div id="seccion-eliminar" class="seccion-crud danger-card oculto">
+                <div class="crud-header">
+                    <h3 class="seccion-titulo danger-titulo"><i class="fas fa-exclamation-triangle"></i> Eliminar cuenta</h3>
+                    <button class="btn-cerrar-crud" title="Cerrar"><i class="fas fa-times"></i></button>
+                </div>
+                <p class="seccion-sub">Esta acción es irreversible. Ingresa tu contraseña para confirmar.</p>
+                <form id="form-eliminar" class="crud-form">
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <div class="input-pass-wrap">
+                            <input type="password" id="delete-password" class="crud-input" required>
+                            <button type="button" class="toggle-pass" data-input="delete-password"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-danger-perfil">Eliminar mi cuenta</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Info cards -->
+            <div id="perfil-info-grid">
+                <div class="info-card">
+                    <i class="fas fa-user info-icon"></i>
+                    <div><span class="info-label">Nombres</span><span class="info-value" id="p-nombres">—</span></div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-id-card info-icon"></i>
+                    <div><span class="info-label">Apellidos</span><span class="info-value" id="p-apellidos">—</span></div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-envelope info-icon"></i>
+                    <div><span class="info-label">Email</span><span class="info-value" id="p-email">—</span></div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-phone info-icon"></i>
+                    <div><span class="info-label">Teléfono</span><span class="info-value" id="p-telefono">—</span></div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-calendar info-icon"></i>
+                    <div><span class="info-label">Fecha de nacimiento</span><span class="info-value" id="p-fecha">—</span></div>
+                </div>
+                <div class="info-card saldo-card">
+                    <i class="fas fa-coins info-icon gold-icon"></i>
+                    <div><span class="info-label">Saldo</span><span class="info-value gold-value" id="p-saldo">—</span></div>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="seccion-card">
+                <h3 class="seccion-titulo"><i class="fas fa-chart-bar"></i> Estadísticas</h3>
+                <div id="stats-grid">
+                    <div class="stat-item"><span class="stat-val" id="stat-partidas">0</span><span class="stat-label">Partidas</span></div>
+                    <div class="stat-item"><span class="stat-val green" id="stat-victorias">0</span><span class="stat-label">Victorias</span></div>
+                    <div class="stat-item"><span class="stat-val red" id="stat-derrotas">0</span><span class="stat-label">Derrotas</span></div>
+                    <div class="stat-item"><span class="stat-val gold" id="stat-pct">0%</span><span class="stat-label">% Victoria</span></div>
+                    <div class="stat-item"><span class="stat-val green" id="stat-ganado">$0</span><span class="stat-label">Total ganado</span></div>
+                    <div class="stat-item"><span class="stat-val" id="stat-apostado">$0</span><span class="stat-label">Total apostado</span></div>
+                    <div class="stat-item stat-item-wide"><span class="stat-val" id="stat-pnl">$0</span><span class="stat-label">Balance neto</span></div>
+                </div>
+            </div>
+
+            <!-- Recarga -->
+            <div id="recarga" class="seccion-card">
+                <h3 class="seccion-titulo"><i class="fas fa-coins"></i> Recargar saldo</h3>
+                <p class="seccion-sub">Elige una cantidad o ingresa la que quieras</p>
+                <div id="recarga-rapida">
+                    <button class="btn-recarga" data-monto="100">+$100</button>
+                    <button class="btn-recarga" data-monto="200">+$200</button>
+                    <button class="btn-recarga" data-monto="500">+$500</button>
+                    <button class="btn-recarga" data-monto="1000">+$1,000</button>
+                </div>
+                <div id="recarga-custom">
+                    <span id="recarga-prefix">$</span>
+                    <input type="number" id="recarga-input" placeholder="Cantidad personalizada" min="1" max="99999">
+                    <button id="btn-recarga-custom" class="btn-gold-perfil">Agregar</button>
+                </div>
+            </div>
+
+            <!-- Historial -->
+            <div id="historial-section" class="seccion-card">
+                <h3 class="seccion-titulo"><i class="fas fa-history"></i> Últimas apuestas</h3>
+                <div id="historial-lista">
+                    <p id="historial-vacio" style="color:rgba(255,255,255,0.3); text-align:center; padding:20px;">
+                        Aún no has hecho ninguna apuesta.
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- Volver al inicio -->
+            <div id="volver-inicio-wrap">
+                <button id="btn-volver-inicio" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                    <i class="fas fa-arrow-up"></i> Volver al inicio de la página
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="/views/utils.js"></script>
+    <script src="/views/perfil.js"></script>
+</body>
+</html>

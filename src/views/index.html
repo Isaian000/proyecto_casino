@@ -1,133 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+<!doctype html>
+<html>
+    <head>
+        <title>Casino en Linea</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <!-- NAVBAR -->
+        <header>
+            <div id="nav-bar">
+                <a href="/" id="casino_logo">Casino en linea</a>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-        crossorigin="anonymous"
-    >
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/styles/styles.css">
+                <div id="log-bttns">
+                    <!-- Botones para usuario NO logueado -->
+                    <a id="log-in-bttn" href="/login">Iniciar sesión</a>
+                    <a id="sign-in-bttn" href="/register">Registrarse</a>
 
-
-</head>
-<body>
-
-    <!-- Nav-var -->
-    <header>
-        <nav class="navbar_section">
-            <div class="navbar_container">
-                <div class="container--items">
-                    <div class="item--logo">
-                        <a href="/" class="casino_logo">Home</a>
-                    </div>
-
-                    <div class="item--search">
-                        <input type="search" id="search" class="search--input" placeholder="Buscar...">
-                    </div>
-                </div>
-        
-                <div class="container_logs">
-                    <ul class="list--items">
-                        <li class="item--bttns">
-                            <a class="bttn login--bttn" href="/login.html">Iniciar sesión</a>
-                        </li>
-                        <li class="item--bttns">
-                            <a class="bttn signin--bttn" href="/sigin.html">Registrarse</a>
-                        </li>
-                        <li class="item--bttns">
-                            <button id="deleteAccountBtn" class="bttn delete--bttn" data-bs-toggle="modal" data-bs-target="#deleteModal" style="display:none">Eliminar cuenta</button>
-                        </li>
-                        <li class="item--bttns">
-                            <a class="nav-link cerrars" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt ms-2" style="color: white;" title="Cerrar sesion"></i>
-                            </a>
-                        </li> 
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-
-
-    <!-- Modal para cerrar sesion -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="logoutModalLabel">Cerrar sesión</h5>
-                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Cerrar"></button>
-              </div>
-              <div class="modal-body">
-                ¿Seguro de que deseas cerrar sesión?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button id="logoutBtn" class="btn btn-custom">Aceptar</button>
-              </div>
-            </div>
-            </div>
-        </div>
-        </div>
-    
-    <!-- Modal para eliminar cuenta -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Eliminar cuenta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Para eliminar tu cuenta, por favor ingresa tu contraseña para confirmar.</p>
-                    <div class="mb-3">
-                        <label for="deletePassword" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="deletePassword" placeholder="Contraseña">
-                        <div id="deleteError" class="text-danger mt-2" style="display:none"></div>
+                    <!-- Zona usuario logueado (oculta por defecto) -->
+                    <div id="user-zone" style="display:none; align-items:center; gap:14px;">
+                        <span id="saldo-display" style="color:#ffd000; font-weight:bold; font-size:15px;"></span>
+                        <a href="/perfil" id="user-avatar" title="Ver perfil"></a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" title="Cerrar sesión">
+                            <i class="fas fa-sign-out-alt" style="color:rgba(255,255,255,0.6); font-size:18px;"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button id="confirmDeleteBtn" class="btn btn-danger">Eliminar cuenta</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- MODAL CERRAR SESIÓN -->
+            <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="logoutModalLabel">Cerrar sesión</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Seguro que deseas cerrar sesión?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-custom" id="confirm-logout">Aceptar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-        <div id="game_selector">
-            <!-- 
-            <a href="/views/blackjack.html" class="games_selector" id="bj_selector">Blackjack</a>
-            <a href="/views/poker.html" class="games_selector" id="poker_selector">Poker</a>
-            <a href="/views/ruleta.html" class="games_selector" id="ruleta_selector">Ruleta</a>
-            -->
-    </div>
+            <!-- HERO BANNER -->
+            <section id="hero">
+                <div id="hero-content">
+                    <p id="hero-sub">🃏 La mejor experiencia de casino online</p>
+                    <h1 id="hero-title">Juega. Apuesta.<br><span id="hero-highlight">Gana.</span></h1>
+                    <p id="hero-desc">Blackjack y Ruleta en tiempo real. Compite contra otros jugadores con fichas virtuales.</p>
+                    <a href="/register" id="hero-cta">Jugar ahora</a>
+                </div>
+                <div id="hero-cards">
+                    <div class="floating-card" id="card1">🂡</div>
+                    <div class="floating-card" id="card2">🂮</div>
+                    <div class="floating-card" id="card3">🂻</div>
+                </div>
+            </section>
 
-    
+            <!-- BARRA DE JUEGOS -->
+            <div id="game_selector">
+                <a href="#blackjack-card" class="games_selector">Blackjack</a>
+                <a href="#ruleta-card" class="games_selector">Ruleta</a>
+            </div>
 
-    </main>
-        <footer>
-            
+            <!-- CARDS DE JUEGOS -->
+            <section id="games_container">
+                <div class="game-card" id="blackjack-card">
+                    <img src="/img/blackjack.jpeg" alt="Blackjack" class="game-img">
+                    <div class="game-info">
+                        <h3 class="game-title">Blackjack 21</h3>
+                        <p class="game-desc">Hasta 3 jugadores. Supera al dealer sin pasarte de 21.</p>
+                        <a href="/mesas" class="game-btn">Jugar</a>
+                    </div>
+                </div>
+                <div class="game-card" id="ruleta-card">
+                    <img src="/img/ruleta.jpg" alt="Ruleta" class="game-img">
+                    <div class="game-info">
+                        <h3 class="game-title">Ruleta</h3>
+                        <p class="game-desc">Apuesta al número, color o docena. ¡La fortuna te espera!</p>
+                        <a href="/mesas" class="game-btn">Jugar</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer id="site-footer">
+            <p>© 2026 Casino en Linea · Proyecto académico ITESO · Solo mayores de 18 años</p>
         </footer>
-        
-        <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"
-        ></script>
 
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-            crossorigin="anonymous"
-        ></script>
-
-        <script src="/deleteAccount.js"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <script src="/views/utils.js"></script>
+        <script src="/views/home.js"></script>
+    </body>
 </html>

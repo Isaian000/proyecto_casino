@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruleta · Casino en Linea</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/juego.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div id="nav-bar">
+            <a href="/" id="casino_logo">Casino en linea</a>
+            <div id="log-bttns">
+                <div id="user-zone" style="display:none; align-items:center; gap:14px;">
+                    <span id="saldo-display"></span>
+                    <span id="mesa-activa-tag" style="display:none;"></span>
+                    <a href="/perfil" id="user-avatar" title="Ver perfil"></a>
+                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt" style="color:rgba(255,255,255,0.6); font-size:18px;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">Cerrar sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">¿Seguro que deseas cerrar sesión?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-custom" id="confirm-logout">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-salir-mesa" class="modal-custom oculto">
+        <div class="modal-custom-box">
+            <p class="modal-custom-titulo">¿Salir de la mesa?</p>
+            <p class="modal-custom-sub">Tu lugar quedará libre para otros jugadores.</p>
+            <div class="modal-custom-btns">
+                <button id="btn-salir-cancelar" class="btn-sec">Cancelar</button>
+                <button id="btn-salir-confirmar" class="btn-gold">Salir →</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultado-overlay" class="oculto"><div id="resultado-msg"></div></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <main id="juego-main">
+        <aside id="juego-aside">
+            <div id="juego-logo-wrap">
+                <span id="juego-emoji">🎡</span>
+                <h2 id="juego-titulo">Ruleta</h2>
+                <p id="juego-desc">Modo prueba · Tú decides el resultado</p>
+            </div>
+
+            <div id="session-timer-wrap">
+                <span class="aside-label">⏱ Tiempo en mesa</span>
+                <span id="session-timer">00:00</span>
+            </div>
+
+            <button id="btn-salir-mesa" class="btn-salir-mesa">
+                <i class="fas fa-door-open"></i> Salir de mesa
+            </button>
+        </aside>
+
+        <section id="mesa">
+            <div id="fase-cargando" class="fase">
+                <div id="cargando-spinner">🎡</div>
+                <p class="fase-titulo">Entrando a la mesa</p>
+                <p id="cargando-mesa-nombre" class="fase-sub"></p>
+            </div>
+
+            <div id="fase-fichas" class="fase oculto">
+                <p class="fase-titulo">Elige tus fichas</p>
+                <p class="fase-sub">Haz click en las fichas para sumar tu apuesta</p>
+                <div id="fichas-row">
+                    <button class="ficha" data-valor="10"  style="--fc:#e74c3c;">$10</button>
+                    <button class="ficha" data-valor="50"  style="--fc:#3498db;">$50</button>
+                    <button class="ficha" data-valor="100" style="--fc:#2ecc71;">$100</button>
+                    <button class="ficha" data-valor="200" style="--fc:#9b59b6;">$200</button>
+                    <button class="ficha" data-valor="500" style="--fc:#ffd000;">$500</button>
+                </div>
+                <div id="apuesta-display">
+                    <span id="apuesta-label">Apuesta actual</span>
+                    <span id="apuesta-total">$0</span>
+                </div>
+                <div id="fichas-acciones">
+                    <button id="btn-limpiar" class="btn-sec">✖ Limpiar</button>
+                    <button id="btn-apostar" class="btn-gold" disabled>Apostar →</button>
+                </div>
+                <div id="saldo-insuficiente" class="oculto">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Saldo insuficiente. <a href="/perfil#recarga">Recargar aquí</a>
+                </div>
+            </div>
+
+            <div id="fase-confirmar" class="fase oculto">
+                <p class="fase-titulo">¿Confirmas tu apuesta?</p>
+                <div id="apuesta-confirm-display">
+                    <span>Apostando</span>
+                    <span id="apuesta-confirm-monto"></span>
+                </div>
+                <p class="fase-sub" style="margin-top:8px;">Si retiras, recuperas tus fichas.</p>
+                <div id="confirmar-acciones">
+                    <button id="btn-retirar" class="btn-sec">↩ Retirar</button>
+                    <button id="btn-confirmar" class="btn-gold">🎰 ¡Apostar!</button>
+                </div>
+            </div>
+
+            <div id="fase-sin-fondos" class="fase oculto">
+                <p class="fase-titulo">💸 Sin fondos</p>
+                <p class="fase-sub">Tu saldo es menor a $10. Recarga para seguir jugando.</p>
+                <a href="/perfil#recarga" class="btn-gold" style="display:inline-block; text-decoration:none; margin-top:8px;">Recargar saldo</a>
+            </div>
+
+            <div id="fase-resultado" class="fase oculto">
+                <p class="fase-titulo">¿Cuál fue el resultado?</p>
+                <p class="fase-sub">Selecciona el resultado de la ronda</p>
+                <div id="resultado-acciones">
+                    <button id="btn-gane" class="btn-ganar">🏆 Gané</button>
+                    <button id="btn-perdi" class="btn-perder">💀 Perdí</button>
+                </div>
+                <p id="apuesta-en-juego-label"></p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/views/utils.js"></script>
+    <script src="/views/socket-client.js"></script>
+    <script src="/views/juego.js"></script>
+</body>
+</html>
