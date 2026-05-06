@@ -1,7 +1,7 @@
 // juego.js - Modo prueba para Blackjack y Ruleta.
 // La logica completa del juego no esta implementada (requisito: solo dejar la estructura).
 // Aqui se permite al usuario apostar (descuenta de wallet) y luego declarar el resultado
-// para acreditar la ganancia o registrar la perdida. Todo va contra el backend LOVABLE:
+// para acreditar la ganancia o registrar la perdida. Todo funciona desde el backend:
 //   POST /api/wallet/bet  { amount, game, lobbyId }
 //   POST /api/wallet/win  { amount, game, lobbyId }
 
