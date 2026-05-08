@@ -1,0 +1,230 @@
+/* Reset básico para asegurar que los bordes no sumen ancho extra */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.mesa-ruleta {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #054d21;
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+/* TABLERO SUPERIOR */
+.ruleta-tablero {
+    display: flex;
+    height: 240px;
+    width: 100%;
+}
+
+.ruleta-tablero-verdes {
+    width: 8%;
+    display: flex;
+    flex-direction: column;
+    background-color: #054d21;
+    border: 1px solid white;
+}
+
+.casilla-0, .casilla-00 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: 1px solid white;
+}
+
+.casilla-0:hover, .casilla-00:hover {
+    background-color: rgba(235, 235, 235, 0.5);
+}
+
+.ruleta-seccion {
+    flex: 1;
+    display: grid;
+    /* 3 filas y 4 columnas */
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: column; /* Importante para el orden 3-2-1 vertical */
+}
+
+.section--item {
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.section--item:hover {
+    background-color: rgba(235, 235, 235, 0.5);
+}
+
+.item--rojo { background-color: #ff0000; }
+.item--negro { background-color: #000000; }
+
+.ruleta-column {
+    width: 6%;
+    display: flex;
+    flex-direction: column;
+    background-color: #054d21;
+}
+
+.column-item {
+    flex: 1;
+    border: 1px solid white;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+/* CONTENEDOR DE APUESTAS INFERIORES */
+.bets--container {
+    /* El ancho debe ser igual a las 3 secciones centrales (flex:1 * 3) */
+    /* Calculamos quitando el ancho de los verdes (8%) y la columna final (6%) */
+    width: 86%; 
+    margin-left: 8%; 
+}
+
+.bet-row {
+    display: flex;
+    height: 60px;
+}
+
+.bet-item {
+    flex: 1;
+    border: 1px solid white;
+    background-color: #054d21;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* Ajustes de color para las apuestas externas */
+.externas .bet-item.item--rojo { background-color: #ff0000; }
+.externas .bet-item.item--negro { background-color: #000000; }
+
+
+
+/* --- FICHAS Y BOTONES INFERIORES --- */
+.chips-bttns-container {
+    margin-top: auto;
+    width: 100%;
+    height: 120px;
+    background-color: rgba(0, 0, 0, 0.85); 
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 40px;
+    box-sizing: border-box;
+
+    border-top: 3px solid #333;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    
+    margin-top: 120px;
+}
+
+.chip-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.chip--item {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    border: 6px dashed;
+    box-sizing: border-box;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.6);
+    transition: transform 0.2s;
+}
+
+.chip--item:hover { transform: translateY(-10px) scale(1.1); }
+
+/* COLORES DE FICHAS */
+.item-1 { border-color: #d1b8e8; background: radial-gradient(circle, #8e44ad 0%, #3e1b4f 100%); }
+.item-2 { border-color: #f7e6d2; background: radial-gradient(circle, #e67e22 0%, #a6511a 100%); }
+.item-3 { border-color: #d1e8d1; background: radial-gradient(circle, #27ae60 0%, #15572a 100%); }
+.item-4 { border-color: #e0e0e0; background: radial-gradient(circle, #a3c1ad 0%, #7d9685 100%); }
+.item-5 { border-color: #fff9e0; background: radial-gradient(circle, #f1c40f 0%, #b8860b 100%); color: #333; }
+
+/* BOTONES DE ACCIÓN */
+.bttns-container { display: flex; gap: 20px; }
+
+.btn-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-family: sans-serif;
+    transition: all 0.2s;
+}
+
+.btn-game .icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.btn-game .text { font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+.btn-doblar .icon { background-color: #f1c40f; color: black; }
+.btn-repartir .icon { background-color: #27ae60; }
+.btn-borrar .icon { background-color: #c0392b; }
+.btn-atras .icon { background-color: #c0392b; }
+.btn-game:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+/* --- BARRA DE INFO INFERIOR --- */
+.info-bet-container {
+    width: 100%;
+    height: 70px;
+    background-color: #1a0202; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+    box-sizing: border-box;
+
+    border-top: 1px solid rgba(197, 160, 89, 0.3);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.info-column { display: flex; flex-direction: column; min-width: 150px; }
+.info-center { text-align: center; }
+.info-label { margin: 0; color: #c5a059; font-family: 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+.info-value { margin: 0; color: #ffffff; font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; }
+.status-msg { margin: 0; color: #ffffff; font-size: 15px; font-family: sans-serif; }

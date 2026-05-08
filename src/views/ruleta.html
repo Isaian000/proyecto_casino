@@ -8,6 +8,7 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
     <link rel="stylesheet" href="/styles/main.css">
     <link rel="stylesheet" href="/styles/juego.css">
+    <link rel="stylesheet" href="/styles/ruleta.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
@@ -75,64 +76,123 @@
             </button>
         </aside>
 
-        <section id="mesa">
-            <div id="fase-cargando" class="fase">
-                <div id="cargando-spinner">🎡</div>
-                <p class="fase-titulo">Entrando a la mesa</p>
-                <p id="cargando-mesa-nombre" class="fase-sub"></p>
+        <section class="mesa-ruleta">
+            <div class="ruleta-tablero">
+                <div class="ruleta-tablero-verdes">
+                    <div class="casilla-00">00</div>
+                    <div class="casilla-0">0</div>
+                </div>
+            
+                <div class="ruleta-seccion">
+                    <div class="section--item item--negro" id="item-3">3</div>
+                    <div class="section--item item--rojo" id="item-2">2</div>
+                    <div class="section--item item--negro" id="item-1">1</div>
+                    <div class="section--item item--rojo" id="item-6">6</div>
+                    <div class="section--item item--negro" id="item-5">5</div>
+                    <div class="section--item item--rojo" id="item-4">4</div>
+                    <div class="section--item item--negro" id="item-9">9</div>
+                    <div class="section--item item--rojo" id="item-8">8</div>
+                    <div class="section--item item--negro" id="item-7">7</div>
+                    <div class="section--item item--rojo" id="item-12">12</div>
+                    <div class="section--item item--negro" id="item-11">11</div>
+                    <div class="section--item item--rojo" id="item-10">10</div>
+                </div>
+            
+                <div class="ruleta-seccion">
+                    <div class="section--item item--negro" id="item-15">15</div>
+                    <div class="section--item item--rojo" id="item-14">14</div>
+                    <div class="section--item item--negro" id="item-13">13</div>
+                    <div class="section--item item--rojo" id="item-18">18</div>
+                    <div class="section--item item--negro" id="item-17">17</div>
+                    <div class="section--item item--rojo" id="item-16">16</div>
+                    <div class="section--item item--negro" id="item-21">21</div>
+                    <div class="section--item item--rojo" id="item-20">20</div>
+                    <div class="section--item item--negro" id="item-19">19</div>
+                    <div class="section--item item--rojo" id="item-24">24</div>
+                    <div class="section--item item--negro" id="item-23">23</div>
+                    <div class="section--item item--rojo" id="item-22">22</div>
+                </div>
+            
+                <div class="ruleta-seccion">
+                    <div class="section--item item--negro" id="item-27">27</div>
+                    <div class="section--item item--rojo" id="item-26">26</div>
+                    <div class="section--item item--negro" id="item-25">25</div>
+                    <div class="section--item item--rojo" id="item-30">30</div>
+                    <div class="section--item item--negro" id="item-29">29</div>
+                    <div class="section--item item--rojo" id="item-28">28</div>
+                    <div class="section--item item--negro" id="item-33">33</div>
+                    <div class="section--item item--rojo" id="item-32">32</div>
+                    <div class="section--item item--negro" id="item-31">31</div>
+                    <div class="section--item item--rojo" id="item-36">36</div>
+                    <div class="section--item item--negro" id="item-35">35</div>
+                    <div class="section--item item--rojo" id="item-34">34</div>
+                </div>
+            
+                <div class="ruleta-column">
+                    <div class="column-item">2 to 1</div>
+                    <div class="column-item">2 to 1</div>
+                    <div class="column-item">2 to 1</div>
+                </div>
+            </div>
+        
+            <div class="bets--container">
+                <div class="bet-row docenas">
+                    <div class="bet-item">1st 12</div>
+                    <div class="bet-item">2nd 12</div>
+                    <div class="bet-item">3rd 12</div>
+                </div>
+                <div class="bet-row externas">
+                    <div class="bet-item">1 to 18</div>
+                    <div class="bet-item">EVEN</div>
+                    <div class="bet-item item--rojo"></div>
+                    <div class="bet-item item--negro"></div>
+                    <div class="bet-item">ODD</div>
+                    <div class="bet-item">19 to 36</div>
+                </div>
             </div>
 
-            <div id="fase-fichas" class="fase oculto">
-                <p class="fase-titulo">Elige tus fichas</p>
-                <p class="fase-sub">Haz click en las fichas para sumar tu apuesta</p>
-                <div id="fichas-row">
-                    <button class="ficha" data-valor="10"  style="--fc:#e74c3c;">$10</button>
-                    <button class="ficha" data-valor="50"  style="--fc:#3498db;">$50</button>
-                    <button class="ficha" data-valor="100" style="--fc:#2ecc71;">$100</button>
-                    <button class="ficha" data-valor="200" style="--fc:#9b59b6;">$200</button>
-                    <button class="ficha" data-valor="500" style="--fc:#ffd000;">$500</button>
+            <div class="chips-bttns-container">
+                <div class="chip-container">
+                    <div class="chip--item item-1" data-valor="5">5</div>
+                    <div class="chip--item item-2" data-valor="10">10</div>
+                    <div class="chip--item item-3" data-valor="100">100</div>
+                    <div class="chip--item item-4" data-valor="500">500</div>
+                    <div class="chip--item item-5" data-valor="1000">1000</div>
                 </div>
-                <div id="apuesta-display">
-                    <span id="apuesta-label">Apuesta actual</span>
-                    <span id="apuesta-total">$0</span>
-                </div>
-                <div id="fichas-acciones">
-                    <button id="btn-limpiar" class="btn-sec">✖ Limpiar</button>
-                    <button id="btn-apostar" class="btn-gold" disabled>Apostar →</button>
-                </div>
-                <div id="saldo-insuficiente" class="oculto">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Saldo insuficiente. <a href="/perfil#recarga">Recargar aquí</a>
-                </div>
-            </div>
-
-            <div id="fase-confirmar" class="fase oculto">
-                <p class="fase-titulo">¿Confirmas tu apuesta?</p>
-                <div id="apuesta-confirm-display">
-                    <span>Apostando</span>
-                    <span id="apuesta-confirm-monto"></span>
-                </div>
-                <p class="fase-sub" style="margin-top:8px;">Si retiras, recuperas tus fichas.</p>
-                <div id="confirmar-acciones">
-                    <button id="btn-retirar" class="btn-sec">↩ Retirar</button>
-                    <button id="btn-confirmar" class="btn-gold">🎰 ¡Apostar!</button>
+            
+                <div class="bttns-container">
+                    <button id="btn-doblar" class="btn-game">
+                        <span class="icon">×2</span>
+                        <span class="text">PEDIR</span>
+                    </button>
+                    <button id="btn-repartir" class="btn-game">
+                        <span class="icon">🎴</span>
+                        <span class="text">REPARTIR</span>
+                    </button>
+                    <button id="btn-borrar" class="btn-game">
+                        <span class="icon">✕</span>
+                        <span class="text">BORRAR</span>
+                    </button>
+                    <button id="btn-atras" class="btn-game">
+                        <span class="icon">↩</span>
+                        <span class="text">PLANTARSE</span>
+                    </button>
                 </div>
             </div>
-
-            <div id="fase-sin-fondos" class="fase oculto">
-                <p class="fase-titulo">💸 Sin fondos</p>
-                <p class="fase-sub">Tu saldo es menor a $10. Recarga para seguir jugando.</p>
-                <a href="/perfil#recarga" class="btn-gold" style="display:inline-block; text-decoration:none; margin-top:8px;">Recargar saldo</a>
-            </div>
-
-            <div id="fase-resultado" class="fase oculto">
-                <p class="fase-titulo">¿Cuál fue el resultado?</p>
-                <p class="fase-sub">Selecciona el resultado de la ronda</p>
-                <div id="resultado-acciones">
-                    <button id="btn-gane" class="btn-ganar">🏆 Gané</button>
-                    <button id="btn-perdi" class="btn-perder">💀 Perdí</button>
+            
+            <div class="info-bet-container">
+                <div class="info-column">
+                    <h2 class="info-label">SALDO DISPONIBLE</h2>
+                    <p class="info-value" id="saldo-mesa">€0.00</p>
                 </div>
-                <p id="apuesta-en-juego-label"></p>
+                <div class="info-column info-center">
+                    <p class="status-msg">Haga sus apuestas, por favor</p>
+                    <span class="game-version">Premium Blackjack</span>
+                </div>
+                <div class="info-column">
+                    <h2 class="info-label">APUESTA TOTAL</h2>
+                    <p class="info-value" id="apuesta-total">€0.00</p>
+                </div>
             </div>
         </section>
     </main>
