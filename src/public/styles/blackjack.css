@@ -233,3 +233,56 @@
 .info-label { margin: 0; color: #c5a059; font-family: 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
 .info-value { margin: 0; color: #ffffff; font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; }
 .status-msg { margin: 0; color: #ffffff; font-size: 15px; font-family: sans-serif; }
+/* --- PANEL JUGADORES EN MESA --- */
+#panel-jugadores-wrap {
+    width: 100%;
+    padding: 8px 24px;
+    background: rgba(0,0,0,0.35);
+    border-bottom: 1px solid rgba(197,160,89,0.2);
+}
+
+.panel-jugadores-titulo {
+    color: #c5a059;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin: 0 0 6px 0;
+    text-transform: uppercase;
+}
+
+#panel-jugadores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.jugador-fila {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(197,160,89,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+    color: #e0e0e0;
+    transition: border-color 0.2s;
+}
+
+.jugador-fila.yo {
+    border-color: #c5a059;
+    background: rgba(197,160,89,0.1);
+}
+
+.jugador-fila.en-espera {
+    opacity: 0.55;
+    border-style: dashed;
+}
+
+/* Turno activo: destaca el jugador con turno */
+.jugador-fila.mi-turno {
+    box-shadow: 0 0 8px rgba(197,160,89,0.6);
+}
+
+.j-nombre { font-weight: 700; color: #ffffff; min-width: 80px; }
+.j-mano   { font-family: monospace; color: #aaa; font-size: 12px; }
+.j-pts    { font-weight: bold; color: #c5a059; min-width: 24px; text-align: right; }

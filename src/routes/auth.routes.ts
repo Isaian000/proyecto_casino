@@ -59,24 +59,37 @@ router.get(
             return;
         }
         const token = signToken({ userId: String(user._id), email: user.email });
-        // Devuelve el token via cookie y JSON. El frontend puede leer la cookie
-        // o redirigir al usuario tras inspeccionar la respuesta.
+
+        // Guarda el token en cookie httpOnly (persiste entre requests).
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        res.status(200).json({
-            message: 'Login con Google exitoso',
-            token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                avatarUrl: user.avatarUrl,
-                bank: user.bank,
-            },
-        });
+
+        // El frontend también necesita el token en localStorage para apiFetch().
+        // Lo inyectamos via script antes de redirigir.
+        const userData = {
+            id: String(user._id),
+            name: user.name,
+            email: user.email,
+            bank: user.bank ?? 0,
+            avatarUrl: user.avatarUrl ?? null,
+        };
+
+        // Página puente: guarda en localStorage y redirige a home.
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/></head><body>
+<script>
+  localStorage.setItem('token', ${JSON.stringify(token)});
+  localStorage.setItem('userId', ${JSON.stringify(userData.id)});
+  localStorage.setItem('username', ${JSON.stringify(userData.name || userData.email)});
+  localStorage.setItem('saldo', ${JSON.stringify(String(userData.bank))});
+  window.location.href = '/';
+</script>
+<p>Redirigiendo...</p></body></html>`;
+
+        res.setHeader('Content-Type', 'text/html');
+        res.send(html);
     }
 );
 

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --ext ts,js,html,css --exec ts-node src/index.ts",
     "build": "rimraf dist && tsc && npm run copy:assets",
-    "copy:assets": "shx mkdir -p dist/views dist/public && shx cp -r src/views/* dist/views/ && shx cp -r src/public/* dist/public/",
+    "copy:assets": "shx mkdir -p dist/views dist/public dist/docs && shx cp -r src/views/* dist/views/ && shx cp -r src/public/* dist/public/ && shx cp -r src/docs/* dist/docs/",
     "start": "node dist/index.js"
   },
   "repository": {

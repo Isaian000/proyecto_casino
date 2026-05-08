@@ -1,0 +1,869 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Casino en Línea API",
+    "description": "API REST del casino en línea. Autenticación via JWT (Bearer token en header `Authorization` o cookie `token`).\n\n## Flujo típico\n1. `POST /api/auth/register` → obtén `token`\n2. Usa `Authorize` (candado arriba) y pega el token\n3. Ya puedes probar el resto de endpoints\n\n## Sockets (Socket.io)\nConecta a `ws://localhost:3000` y emite los siguientes eventos:\n- `joinLobby` → `{ lobbyId, userId, username }` — unirse a la sala de un lobby\n- `leaveLobby` → `{ lobbyId, userId, username }` — salir de la sala\n\nEscucha:\n- `playerJoined` → `{ lobbyId, userId, username }` — otro jugador entró\n- `playerLeft` → `{ lobbyId, userId, username }` — otro jugador salió",
+    "version": "1.2.0",
+    "contact": {
+      "name": "Casino Online"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Desarrollo local"
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Registro, login y sesión" },
+    { "name": "Users", "description": "Perfil y cuenta del usuario autenticado" },
+    { "name": "Wallet", "description": "Saldo, depósitos, retiros y apuestas" },
+    { "name": "Lobbies", "description": "Mesas de juego (Blackjack / Ruleta)" },
+    { "name": "Friends", "description": "Sistema de amigos" },
+    { "name": "Exchange", "description": "Tipo de cambio de divisas (API externa)" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token JWT obtenido en login o register. Ejemplo: `Bearer eyJhbGci...`"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "6630a1b2c3d4e5f678901234" },
+          "name": { "type": "string", "example": "Manuel" },
+          "last_name": { "type": "string", "example": "García" },
+          "email": { "type": "string", "format": "email", "example": "manuel@example.com" },
+          "phone_number": { "type": "string", "example": "+523311223344" },
+          "birthdate": { "type": "string", "format": "date-time" },
+          "bank": { "type": "number", "example": 1500 },
+          "avatarUrl": { "type": "string", "nullable": true, "example": "https://res.cloudinary.com/..." },
+          "authProvider": { "type": "string", "enum": ["local", "google"] },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Lobby": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "code": { "type": "string", "example": "BL-01" },
+          "game": { "type": "string", "enum": ["blackjack", "roulette"] },
+          "status": { "type": "string", "enum": ["open", "in_progress", "closed"] },
+          "minBet": { "type": "number", "example": 10 },
+          "maxBet": { "type": "number", "example": 1000 },
+          "maxPlayers": { "type": "number", "example": 4 },
+          "players": { "type": "array", "items": { "type": "string" } },
+          "host": { "type": "string", "nullable": true }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "type": { "type": "string", "enum": ["deposit", "withdrawal", "bet", "win"] },
+          "amount": { "type": "number" },
+          "balanceAfter": { "type": "number" },
+          "game": { "type": "string", "nullable": true },
+          "lobbyId": { "type": "string", "nullable": true },
+          "status": { "type": "string", "enum": ["completed", "failed"] },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Friendship": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "requester": { "type": "string" },
+          "recipient": { "type": "string" },
+          "status": { "type": "string", "enum": ["pending", "accepted", "rejected"] },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "Acceso no autorizado. Token requerido." }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Token ausente o inválido",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Recurso no encontrado",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Error interno del servidor",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Registrar nuevo usuario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name","last_name","email","day","month","year","phone_number","password"],
+                "properties": {
+                  "name": { "type": "string", "example": "Manuel" },
+                  "last_name": { "type": "string", "example": "García" },
+                  "email": { "type": "string", "format": "email", "example": "manuel@example.com" },
+                  "day": { "type": "integer", "example": 15 },
+                  "month": { "type": "integer", "example": 3 },
+                  "year": { "type": "integer", "example": 2000 },
+                  "phone_number": { "type": "string", "example": "+523311223344" },
+                  "password": { "type": "string", "minLength": 6, "example": "mipassword123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "token": { "type": "string" },
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Campos faltantes" },
+          "409": { "description": "Email ya registrado" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Iniciar sesión",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email","password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "manuel@example.com" },
+                  "password": { "type": "string", "example": "mipassword123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login exitoso, retorna JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "token": { "type": "string", "description": "JWT — guárdalo para las demás llamadas" },
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Campos faltantes" },
+          "401": { "description": "Contraseña incorrecta" },
+          "404": { "description": "Usuario no encontrado" }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Cerrar sesión (limpia cookie)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Sesión cerrada" }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Obtener usuario autenticado actual",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Datos del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/auth/google": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Iniciar flujo Google OAuth 2.0",
+        "description": "Redirige al usuario a Google para autenticar. Requiere `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en `.env`. Si no están configurados responde 503.\n\n**No se prueba en Swagger UI** — abrir directamente en el navegador.",
+        "responses": {
+          "302": { "description": "Redirección a Google" },
+          "503": { "description": "OAuth no configurado" }
+        }
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Callback Google OAuth (manejado por el servidor)",
+        "description": "Google redirige aquí tras autenticar. El servidor emite el JWT en cookie y **redirige al home** (`/`). El token también se incluye en el body para clientes API.",
+        "responses": {
+          "302": { "description": "Redirect a `/` con cookie `token` seteada" },
+          "401": { "description": "Autenticación con Google fallida" },
+          "503": { "description": "OAuth no configurado" }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Obtener perfil completo del usuario",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Perfil del usuario (sin password)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Actualizar nombre / apellido / teléfono",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Manuel" },
+                  "last_name": { "type": "string", "example": "García" },
+                  "phone_number": { "type": "string", "example": "+523311223344" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Perfil actualizado" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/users/me/password": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Cambiar contraseña",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["currentPassword","newPassword"],
+                "properties": {
+                  "currentPassword": { "type": "string", "example": "mipassword123" },
+                  "newPassword": { "type": "string", "minLength": 6, "example": "nuevapass456" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Contraseña actualizada" },
+          "400": { "description": "Contraseña actual incorrecta" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/users/me/avatar": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Subir avatar (multipart/form-data)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Imagen (jpg/png/webp, máx 5 MB)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Avatar actualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "avatarUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/users/me/delete": {
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Eliminar cuenta",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Cuenta eliminada" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/balance": {
+      "get": {
+        "tags": ["Wallet"],
+        "summary": "Consultar saldo",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Saldo actual",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "balance": { "type": "number", "example": 1500 }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/deposit": {
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Depositar fichas",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": { "type": "number", "minimum": 1, "example": 500 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Depósito realizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "balance": { "type": "number", "example": 2000 }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "amount inválido" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/withdraw": {
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Retirar fichas",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": { "type": "number", "minimum": 1, "example": 200 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Retiro realizado" },
+          "400": { "description": "Saldo insuficiente o amount inválido" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/bet": {
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Registrar apuesta (descuenta saldo)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": { "type": "number", "example": 100 },
+                  "game": { "type": "string", "example": "blackjack" },
+                  "lobbyId": { "type": "string", "example": "6630a1b2c3d4e5f678901234" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Apuesta registrada, saldo descontado" },
+          "400": { "description": "Saldo insuficiente" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/win": {
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Acreditar ganancia",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": { "type": "number", "example": 200, "description": "Para BJ: apuesta*2. Para empate: apuesta*1 (devolución)." },
+                  "game": { "type": "string", "example": "blackjack" },
+                  "lobbyId": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Ganancia acreditada" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/transactions": {
+      "get": {
+        "tags": ["Wallet"],
+        "summary": "Historial de transacciones",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "default": 20, "maximum": 100 },
+            "description": "Número máximo de registros"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de transacciones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": { "type": "integer" },
+                    "transactions": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Transaction" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/wallet/stats": {
+      "get": {
+        "tags": ["Wallet"],
+        "summary": "Estadísticas del jugador",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Estadísticas agregadas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "partidasJugadas": { "type": "integer" },
+                    "victorias": { "type": "integer" },
+                    "derrotas": { "type": "integer" },
+                    "porcentajeVictorias": { "type": "integer" },
+                    "totalGanado": { "type": "number" },
+                    "totalApostado": { "type": "number" },
+                    "netoPnL": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/lobbies": {
+      "get": {
+        "tags": ["Lobbies"],
+        "summary": "Listar mesas disponibles",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "game",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["blackjack","roulette"] },
+            "description": "Filtrar por tipo de juego"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de lobbies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": { "type": "integer" },
+                    "lobbies": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Lobby" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "post": {
+        "tags": ["Lobbies"],
+        "summary": "Crear nueva mesa",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["game"],
+                "properties": {
+                  "game": { "type": "string", "enum": ["blackjack","roulette"] },
+                  "minBet": { "type": "number", "default": 10 },
+                  "maxBet": { "type": "number", "default": 1000 },
+                  "maxPlayers": { "type": "integer", "default": 4 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Mesa creada" },
+          "400": { "description": "game inválido" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/lobbies/{id}/join": {
+      "post": {
+        "tags": ["Lobbies"],
+        "summary": "Unirse a una mesa",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "ObjectId del lobby"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Unido exitosamente" },
+          "400": { "description": "Mesa llena o no disponible" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/lobbies/{id}/leave": {
+      "post": {
+        "tags": ["Lobbies"],
+        "summary": "Salir de una mesa",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Saliste del lobby" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/friends": {
+      "get": {
+        "tags": ["Friends"],
+        "summary": "Listar amigos aceptados",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de amigos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "friends": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Friendship" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/friends/requests": {
+      "post": {
+        "tags": ["Friends"],
+        "summary": "Enviar solicitud de amistad",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recipientId": { "type": "string", "description": "ObjectId del destinatario" },
+                  "email": { "type": "string", "description": "Email alternativo al ID" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Solicitud enviada" },
+          "400": { "description": "No puedes enviarte solicitud a ti mismo" },
+          "404": { "description": "Destinatario no encontrado" },
+          "409": { "description": "Ya existe una relación" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "get": {
+        "tags": ["Friends"],
+        "summary": "Listar solicitudes pendientes recibidas",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Solicitudes pendientes" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/friends/requests/{id}": {
+      "patch": {
+        "tags": ["Friends"],
+        "summary": "Aceptar o rechazar solicitud",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["action"],
+                "properties": {
+                  "action": { "type": "string", "enum": ["accept","reject"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Solicitud procesada" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/friends/{id}": {
+      "delete": {
+        "tags": ["Friends"],
+        "summary": "Eliminar amigo",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "ObjectId del friendship"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Amigo eliminado" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/exchange/rates": {
+      "get": {
+        "tags": ["Exchange"],
+        "summary": "Obtener tasas de cambio actuales (base USD)",
+        "responses": {
+          "200": {
+            "description": "Tasas de cambio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "base": { "type": "string", "example": "USD" },
+                    "rates": { "type": "object", "additionalProperties": { "type": "number" } }
+                  }
+                }
+              }
+            }
+          },
+          "502": { "description": "Error al consultar API externa" }
+        }
+      }
+    },
+    "/api/exchange/convert": {
+      "get": {
+        "tags": ["Exchange"],
+        "summary": "Convertir cantidad entre divisas",
+        "parameters": [
+          { "name": "from", "in": "query", "required": true, "schema": { "type": "string", "example": "USD" } },
+          { "name": "to", "in": "query", "required": true, "schema": { "type": "string", "example": "MXN" } },
+          { "name": "amount", "in": "query", "required": true, "schema": { "type": "number", "example": 100 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado de conversión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": { "type": "string" },
+                    "to": { "type": "string" },
+                    "amount": { "type": "number" },
+                    "result": { "type": "number" },
+                    "rate": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

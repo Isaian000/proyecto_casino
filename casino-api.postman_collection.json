@@ -1,0 +1,485 @@
+{
+  "info": {
+    "name": "Casino Online API",
+    "description": "Colección completa de la API REST del Casino en Línea.\n\n## Setup rápido\n1. Importa este archivo en Postman\n2. Importa también el archivo `casino-env.postman_environment.json`\n3. Selecciona el environment **Casino Local** en la esquina superior derecha\n4. Ejecuta **Auth > Login** — el token se guarda automáticamente\n5. Ya puedes usar el resto de requests\n\n## Sockets\nLos eventos de Socket.io están documentados en la carpeta **Sockets (referencia)**.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "casino-online-v1"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Registro, login, sesión y Google OAuth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manuel\",\n  \"last_name\": \"García\",\n  \"email\": \"manuel@casino.com\",\n  \"day\": 15,\n  \"month\": 3,\n  \"year\": 2000,\n  \"phone_number\": \"+523311223344\",\n  \"password\": \"mipassword123\"\n}"
+            },
+            "description": "Crea un nuevo usuario. Devuelve JWT en `token`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  if (data.token) {",
+                  "    pm.environment.set('token', data.token);",
+                  "    pm.environment.set('userId', data.user.id);",
+                  "    console.log('✅ Token guardado desde Register');",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login ⚡ (guarda token)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+            },
+            "description": "Inicia sesión. El script de test guarda el JWT en `{{token}}` automáticamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login exitoso', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 200) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('token', data.token);",
+                  "  pm.environment.set('userId', data.user.id);",
+                  "  pm.environment.set('userBalance', data.user.bank);",
+                  "  console.log('✅ Token guardado automáticamente. Balance:', data.user.bank);",
+                  "} else {",
+                  "  console.error('❌ Login fallido:', pm.response.json().message);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api","auth","logout"] },
+            "description": "Limpia la cookie httpOnly del servidor."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.environment.unset('token');",
+                  "  console.log('Token eliminado del environment');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me (auth)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api","auth","me"] }
+          }
+        },
+        {
+          "name": "Google OAuth — abrir en navegador",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/google", "host": ["{{baseUrl}}"], "path": ["api","auth","google"] },
+            "description": "⚠️ No ejecutar en Postman — abre esta URL en el navegador para iniciar el flujo OAuth.\n\nRequiere GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en .env"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "Perfil, contraseña y avatar del usuario autenticado",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api","users","me"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api","users","me"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manuel\",\n  \"last_name\": \"García\",\n  \"phone_number\": \"+523311223344\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/users/me/password", "host": ["{{baseUrl}}"], "path": ["api","users","me","password"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"mipassword123\",\n  \"newPassword\": \"nuevapass456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Upload Avatar (multipart)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/users/me/avatar", "host": ["{{baseUrl}}"], "path": ["api","users","me","avatar"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "avatar", "type": "file", "description": "Imagen JPG/PNG/WEBP máx 5MB" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api","users","me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "description": "Saldo, depósitos, apuestas y estadísticas",
+      "item": [
+        {
+          "name": "Get Balance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/wallet/balance", "host": ["{{baseUrl}}"], "path": ["api","wallet","balance"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.environment.set('userBalance', pm.response.json().balance);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deposit",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/wallet/deposit", "host": ["{{baseUrl}}"], "path": ["api","wallet","deposit"] },
+            "body": { "mode": "raw", "raw": "{\n  \"amount\": 500\n}" }
+          }
+        },
+        {
+          "name": "Withdraw",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/wallet/withdraw", "host": ["{{baseUrl}}"], "path": ["api","wallet","withdraw"] },
+            "body": { "mode": "raw", "raw": "{\n  \"amount\": 100\n}" }
+          }
+        },
+        {
+          "name": "Place Bet",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/wallet/bet", "host": ["{{baseUrl}}"], "path": ["api","wallet","bet"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100,\n  \"game\": \"blackjack\",\n  \"lobbyId\": \"{{lobbyId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Win",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/wallet/win", "host": ["{{baseUrl}}"], "path": ["api","wallet","win"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 200,\n  \"game\": \"blackjack\",\n  \"lobbyId\": \"{{lobbyId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Transactions History",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/wallet/transactions?limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","wallet","transactions"],
+              "query": [{ "key": "limit", "value": "20" }]
+            }
+          }
+        },
+        {
+          "name": "Stats",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/wallet/stats", "host": ["{{baseUrl}}"], "path": ["api","wallet","stats"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lobbies",
+      "description": "Mesas de juego Blackjack y Ruleta",
+      "item": [
+        {
+          "name": "List Lobbies (all)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/lobbies", "host": ["{{baseUrl}}"], "path": ["api","lobbies"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const data = pm.response.json();",
+                  "  if (data.lobbies && data.lobbies.length > 0) {",
+                  "    pm.environment.set('lobbyId', data.lobbies[0]._id);",
+                  "    console.log('lobbyId guardado:', data.lobbies[0]._id);",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List Lobbies (blackjack)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lobbies?game=blackjack",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","lobbies"],
+              "query": [{ "key": "game", "value": "blackjack" }]
+            }
+          }
+        },
+        {
+          "name": "List Lobbies (roulette)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lobbies?game=roulette",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","lobbies"],
+              "query": [{ "key": "game", "value": "roulette" }]
+            }
+          }
+        },
+        {
+          "name": "Create Lobby",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/lobbies", "host": ["{{baseUrl}}"], "path": ["api","lobbies"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": \"blackjack\",\n  \"minBet\": 10,\n  \"maxBet\": 1000,\n  \"maxPlayers\": 4\n}"
+            }
+          }
+        },
+        {
+          "name": "Join Lobby",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/lobbies/{{lobbyId}}/join", "host": ["{{baseUrl}}"], "path": ["api","lobbies","{{lobbyId}}","join"] }
+          }
+        },
+        {
+          "name": "Leave Lobby",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/lobbies/{{lobbyId}}/leave", "host": ["{{baseUrl}}"], "path": ["api","lobbies","{{lobbyId}}","leave"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Friends",
+      "description": "Sistema de amigos",
+      "item": [
+        {
+          "name": "List Friends",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/friends", "host": ["{{baseUrl}}"], "path": ["api","friends"] }
+          }
+        },
+        {
+          "name": "Send Friend Request (por email)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/friends/requests", "host": ["{{baseUrl}}"], "path": ["api","friends","requests"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"otro@casino.com\"\n}" }
+          }
+        },
+        {
+          "name": "Send Friend Request (por ID)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/friends/requests", "host": ["{{baseUrl}}"], "path": ["api","friends","requests"] },
+            "body": { "mode": "raw", "raw": "{\n  \"recipientId\": \"{{friendId}}\"\n}" }
+          }
+        },
+        {
+          "name": "List Pending Requests",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/friends/requests", "host": ["{{baseUrl}}"], "path": ["api","friends","requests"] }
+          }
+        },
+        {
+          "name": "Accept Friend Request",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/friends/requests/{{friendshipId}}", "host": ["{{baseUrl}}"], "path": ["api","friends","requests","{{friendshipId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"action\": \"accept\"\n}" }
+          }
+        },
+        {
+          "name": "Reject Friend Request",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/friends/requests/{{friendshipId}}", "host": ["{{baseUrl}}"], "path": ["api","friends","requests","{{friendshipId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"action\": \"reject\"\n}" }
+          }
+        },
+        {
+          "name": "Remove Friend",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/friends/{{friendshipId}}", "host": ["{{baseUrl}}"], "path": ["api","friends","{{friendshipId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Exchange",
+      "description": "Tipo de cambio de divisas (sin autenticación requerida)",
+      "item": [
+        {
+          "name": "Get Rates (base USD)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/exchange/rates", "host": ["{{baseUrl}}"], "path": ["api","exchange","rates"] }
+          }
+        },
+        {
+          "name": "Convert Currency",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/exchange/convert?from=USD&to=MXN&amount=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","exchange","convert"],
+              "query": [
+                { "key": "from", "value": "USD" },
+                { "key": "to", "value": "MXN" },
+                { "key": "amount", "value": "100" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sockets (referencia)",
+      "description": "Documentación de los eventos Socket.io.\n\n⚠️ Estos requests no se pueden ejecutar en Postman (son WebSocket). Usa el cliente del browser o una herramienta como wscat.\n\n## Conexión\n```\nconst socket = io('http://localhost:3000');\n```\n\n## Eventos de Lobby (presencia)\n- **Emit** `joinLobby` → `{ lobbyId, userId, username }`\n- **Emit** `leaveLobby` → `{ lobbyId, userId, username }`\n- **On** `playerJoined` → `{ lobbyId, userId, username }`\n- **On** `playerLeft` → `{ lobbyId, userId, username }`\n\n## Eventos de Blackjack (partida compartida)\n- **Emit** `bj:iniciarRonda` → `{ lobbyId, userId, username }` — inicia/une a ronda\n- **Emit** `bj:pedirCarta` — pide carta para la mano propia\n- **Emit** `bj:plantarse` — el jugador se planta\n- **On** `bj:estadoActualizado` → `{ lobbyId, manoDealer, jugadores[], rondaActiva, ... }`\n- **On** `bj:finRonda` → `{ resultados: { [socketId]: 'ganaste'|'perdiste'|'empate' }, puntosDealer }`\n- **On** `bj:resultadoJugador` → `{ resultado, puntos }` (emitido solo al socket que hizo bust)",
+      "item": [
+        {
+          "name": "⚠️ WebSocket — ver descripción de la carpeta",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}", "host": ["{{baseUrl}}"] },
+            "description": "Los eventos de Socket.io están documentados en la descripción de esta carpeta. No son requests HTTP estándar."
+          }
+        }
+      ]
+    }
+  ]
+}

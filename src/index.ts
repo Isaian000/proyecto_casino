@@ -16,6 +16,7 @@ import walletRoutes from './routes/wallet.routes';
 import lobbyRoutes from './routes/lobby.routes';
 import userRoutes from './routes/user.routes';
 import exchangeRoutes from './routes/exchange.routes';
+import docsRoutes from './routes/docs.routes';
 
 const app = express();
 const PORT = env.PORT;
@@ -53,6 +54,9 @@ app.use('/api/wallet', walletRoutes);
 app.use('/api/lobbies', lobbyRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/exchange', exchangeRoutes);
+
+// Documentación Swagger UI — accesible en /api/docs
+app.use('/api/docs', docsRoutes);
 
 // Vistas
 app.get('/', (_req, res) => {
@@ -94,4 +98,6 @@ initSocket(httpServer);
 httpServer.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
     console.log(`Socket.io escuchando en ws://localhost:${PORT}`);
+    console.log(`Swagger UI disponible en http://localhost:${PORT}/api/docs`);
 });
+//
