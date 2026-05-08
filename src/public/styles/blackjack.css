@@ -1,0 +1,235 @@
+/* --- CONFIGURACIÓN DE LA MESA (FONDO Y TAPETE) --- */
+.mesa-blackjack {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 40%, #009933 0%, #006622 70%, #004411 100%);
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- TEXTOS PRINCIPALES DE LA MESA --- */
+.mesa-info-container {
+    color: rgb(235, 235, 235);
+    text-align: center;
+    margin-top: 40px;
+}
+
+.mesa-tittle {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 52px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.mesa-subtitle {
+    font-family: sans-serif;
+    color: #ffcc00;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* --- MARCADOR DE PUNTOS (ESTILO GLASSMORPHISM) --- */
+.marcador-blackjack {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 20px auto;
+    padding: 15px 40px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    z-index: 10;
+}
+
+.puntos-box {
+    text-align: center;
+    min-width: 120px;
+}
+
+.puntos-box h3 {
+    color: #c5a059;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+}
+
+.puntos-box span {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.secuencia-numeros {
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* --- ÁREA DE APUESTA ÚNICA CENTRAL --- */
+.bets-container {
+    width: 100%;
+    height: 120px;
+    background-color: transparent;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center; /* Centra el círculo único */
+    align-items: center;
+    margin-top: 60px;
+    position: relative;
+}
+
+.bet--item {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 3px dotted rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    
+}
+
+/* Efecto cuando una ficha "vuela" hacia el círculo */
+.bet--item.drag-over {
+    border-color: #ffcc00;
+    background: rgba(255, 204, 0, 0.1);
+    transform: scale(1.05);
+}
+
+/* --- ANIMACIÓN DE FICHA FLOTANTE (FANTASMA) --- */
+.chip-fantasma {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+}
+
+/* --- PILA DE FICHAS DENTRO DEL CÍRCULO --- */
+.stack-fichas {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- FICHAS Y BOTONES INFERIORES --- */
+.chips-bttns-container {
+    margin-top: auto;
+    width: 100%;
+    height: 120px;
+    background-color: rgba(0, 0, 0, 0.85); 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+    border-top: 3px solid #333;
+}
+
+.chip-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.chip--item {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    border: 6px dashed;
+    box-sizing: border-box;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.6);
+    transition: transform 0.2s;
+}
+
+.chip--item:hover { transform: translateY(-10px) scale(1.1); }
+
+/* COLORES DE FICHAS */
+.item-1 { border-color: #d1b8e8; background: radial-gradient(circle, #8e44ad 0%, #3e1b4f 100%); }
+.item-2 { border-color: #f7e6d2; background: radial-gradient(circle, #e67e22 0%, #a6511a 100%); }
+.item-3 { border-color: #d1e8d1; background: radial-gradient(circle, #27ae60 0%, #15572a 100%); }
+.item-4 { border-color: #e0e0e0; background: radial-gradient(circle, #a3c1ad 0%, #7d9685 100%); }
+.item-5 { border-color: #fff9e0; background: radial-gradient(circle, #f1c40f 0%, #b8860b 100%); color: #333; }
+
+/* BOTONES DE ACCIÓN */
+.bttns-container { display: flex; gap: 20px; }
+
+.btn-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-family: sans-serif;
+    transition: all 0.2s;
+}
+
+.btn-game .icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.btn-game .text { font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+.btn-doblar .icon { background-color: #f1c40f; color: black; }
+.btn-repartir .icon { background-color: #27ae60; }
+.btn-borrar .icon { background-color: #c0392b; }
+.btn-atras .icon { background-color: #c0392b; }
+.btn-game:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+/* --- BARRA DE INFO INFERIOR --- */
+.info-bet-container {
+    width: 100%;
+    height: 70px;
+    background-color: #1a0202; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+.info-column { display: flex; flex-direction: column; min-width: 150px; }
+.info-center { text-align: center; }
+.info-label { margin: 0; color: #c5a059; font-family: 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+.info-value { margin: 0; color: #ffffff; font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; }
+.status-msg { margin: 0; color: #ffffff; font-size: 15px; font-family: sans-serif; }

@@ -8,20 +8,20 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
     <link rel="stylesheet" href="/styles/main.css">
     <link rel="stylesheet" href="/styles/juego.css">
+    <link rel="stylesheet" href="/styles/blackjack.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div id="nav-bar">
-            <a href="/" id="casino_logo">Casino en linea</a>
+            <a href="/" id="casino_logo">Casino en línea</a>
             <div id="log-bttns">
-                <div id="user-zone" style="display:none; align-items:center; gap:14px;">
-                    <span id="saldo-display"></span>
-                    <span id="mesa-activa-tag" style="display:none;"></span>
-                    <a href="/perfil" id="user-avatar" title="Ver perfil"></a>
+                <div id="user-zone" style="display:flex; align-items:center; gap:14px;">
+                    <span id="saldo-display">$0.00</span>
+                    <a href="/perfil" id="user-avatar"></a>
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                        <i class="fas fa-sign-out-alt" style="color:rgba(255,255,255,0.6); font-size:18px;"></i>
+                        <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </div>
             </div>
@@ -58,81 +58,73 @@
     <canvas id="confetti-canvas"></canvas>
 
     <main id="juego-main">
-        <aside id="juego-aside">
-            <div id="juego-logo-wrap">
-                <span id="juego-emoji">🃏</span>
-                <h2 id="juego-titulo">Blackjack 21</h2>
-                <p id="juego-desc">Modo prueba · Tú decides el resultado</p>
-            </div>
-
-            <div id="session-timer-wrap">
-                <span class="aside-label">⏱ Tiempo en mesa</span>
-                <span id="session-timer">00:00</span>
-            </div>
-
-            <button id="btn-salir-mesa" class="btn-salir-mesa">
-                <i class="fas fa-door-open"></i> Salir de mesa
-            </button>
-        </aside>
-
         <section id="mesa">
-            <div id="fase-cargando" class="fase">
-                <div id="cargando-spinner">🃏</div>
-                <p class="fase-titulo">Entrando a la mesa</p>
-                <p id="cargando-mesa-nombre" class="fase-sub"></p>
-            </div>
-
-            <div id="fase-fichas" class="fase oculto">
-                <p class="fase-titulo">Elige tus fichas</p>
-                <p class="fase-sub">Haz click en las fichas para sumar tu apuesta</p>
-                <div id="fichas-row">
-                    <button class="ficha" data-valor="10"  style="--fc:#e74c3c;">$10</button>
-                    <button class="ficha" data-valor="50"  style="--fc:#3498db;">$50</button>
-                    <button class="ficha" data-valor="100" style="--fc:#2ecc71;">$100</button>
-                    <button class="ficha" data-valor="200" style="--fc:#9b59b6;">$200</button>
-                    <button class="ficha" data-valor="500" style="--fc:#ffd000;">$500</button>
+            <div class="mesa-blackjack">
+                <div class="mesa-info-container">
+                    <h1 class="mesa-tittle">BlackJack</h1>
+                    <p class="mesa-subtitle">El BlackJack paga 3 a 2</p>
                 </div>
-                <div id="apuesta-display">
-                    <span id="apuesta-label">Apuesta actual</span>
-                    <span id="apuesta-total">$0</span>
+            
+                <div class="marcador-blackjack">
+                    <div class="puntos-box">
+                        <h3>Dealer: <span id="puntos-dealer">0</span></h3>
+                        <p id="secuencia-dealer" class="secuencia-numeros">Esperando...</p>
+                    </div>
+                    <div class="puntos-box">
+                        <h3>Jugador: <span id="puntos-jugador">0</span></h3>
+                        <p id="secuencia-jugador" class="secuencia-numeros">Esperando...</p>
+                    </div>
                 </div>
-                <div id="fichas-acciones">
-                    <button id="btn-limpiar" class="btn-sec">✖ Limpiar</button>
-                    <button id="btn-apostar" class="btn-gold" disabled>Apostar →</button>
+            
+                <div class="bets-container">
+                    <div id="circulo-apuesta" class="bet--item">
+                        <div class="stack-fichas"></div> 
+                    </div>
                 </div>
-                <div id="saldo-insuficiente" class="oculto">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Saldo insuficiente. <a href="/perfil#recarga">Recargar aquí</a>
+            
+                <div class="chips-bttns-container">
+                    <div class="chip-container">
+                        <div class="chip--item item-1" data-valor="5">5</div>
+                        <div class="chip--item item-2" data-valor="10">10</div>
+                        <div class="chip--item item-3" data-valor="100">100</div>
+                        <div class="chip--item item-4" data-valor="500">500</div>
+                        <div class="chip--item item-5" data-valor="1000">1000</div>
+                    </div>
+                
+                    <div class="bttns-container">
+                        <button id="btn-doblar" class="btn-game">
+                            <span class="icon">×2</span>
+                            <span class="text">PEDIR</span>
+                        </button>
+                        <button id="btn-repartir" class="btn-game">
+                            <span class="icon">🎴</span>
+                            <span class="text">REPARTIR</span>
+                        </button>
+                        <button id="btn-borrar" class="btn-game">
+                            <span class="icon">✕</span>
+                            <span class="text">BORRAR</span>
+                        </button>
+                        <button id="btn-atras" class="btn-game">
+                            <span class="icon">↩</span>
+                            <span class="text">PLANTARSE</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            <div id="fase-confirmar" class="fase oculto">
-                <p class="fase-titulo">¿Confirmas tu apuesta?</p>
-                <div id="apuesta-confirm-display">
-                    <span>Apostando</span>
-                    <span id="apuesta-confirm-monto"></span>
+            
+                <div class="info-bet-container">
+                    <div class="info-column">
+                        <h2 class="info-label">SALDO DISPONIBLE</h2>
+                        <p class="info-value" id="saldo-mesa">€0.00</p>
+                    </div>
+                    <div class="info-column info-center">
+                        <p class="status-msg">Haga sus apuestas, por favor</p>
+                        <span class="game-version">Premium Blackjack</span>
+                    </div>
+                    <div class="info-column">
+                        <h2 class="info-label">APUESTA TOTAL</h2>
+                        <p class="info-value" id="apuesta-total">€0.00</p>
+                    </div>
                 </div>
-                <p class="fase-sub" style="margin-top:8px;">Si retiras, recuperas tus fichas.</p>
-                <div id="confirmar-acciones">
-                    <button id="btn-retirar" class="btn-sec">↩ Retirar</button>
-                    <button id="btn-confirmar" class="btn-gold">🎰 ¡Apostar!</button>
-                </div>
-            </div>
-
-            <div id="fase-sin-fondos" class="fase oculto">
-                <p class="fase-titulo">💸 Sin fondos</p>
-                <p class="fase-sub">Tu saldo es menor a $10. Recarga para seguir jugando.</p>
-                <a href="/perfil#recarga" class="btn-gold" style="display:inline-block; text-decoration:none; margin-top:8px;">Recargar saldo</a>
-            </div>
-
-            <div id="fase-resultado" class="fase oculto">
-                <p class="fase-titulo">¿Cuál fue el resultado?</p>
-                <p class="fase-sub">Selecciona el resultado de la mano</p>
-                <div id="resultado-acciones">
-                    <button id="btn-gane" class="btn-ganar">🏆 Gané</button>
-                    <button id="btn-perdi" class="btn-perder">💀 Perdí</button>
-                </div>
-                <p id="apuesta-en-juego-label"></p>
             </div>
         </section>
     </main>
@@ -144,6 +136,10 @@
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="/views/utils.js"></script>
     <script src="/views/socket-client.js"></script>
+    <script src="/views/blackjack.js"></script> 
     <script src="/views/juego.js"></script>
 </body>
 </html>
+
+
+    
