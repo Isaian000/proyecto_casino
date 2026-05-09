@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificación de sesión
+    // Verificación de sesion del usuario
     if (!localStorage.getItem('token')) { window.location.href = '/login'; return; }
     if (typeof initNavbar === 'function') initNavbar(); 
     if (typeof initLogout === 'function') initLogout();
@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const $ = (id) => document.getElementById(id);
     
-    // Variables globales para comunicación entre archivos
+    // Variables globales para comunicacion entre archivos
     window.apuestaTotalGlobal = 0;
     let apuestaConfirmada = 0; // Para el flujo de Blackjack
 
-    // --- Función de Actualización de Interfaz ---
+    // --- Funcion de Actualizacion de Interfaz ---
     window.actualizarDisplaysGlobal = function(saldo) {
         if (saldo !== undefined) {
             // Actualizar en el navbar y en la mesa
@@ -32,11 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Manejo de Fichas ---
     document.querySelectorAll('.chip--item').forEach(chip => {
         chip.addEventListener('click', () => {
-            // Si es Blackjack, no permitir cambiar apuesta si la ronda inició
             if (apiGame === 'blackjack' && window.BJ && window.BJ.rondaActiva) return;
-
-            // En la Ruleta, el archivo ruleta.js maneja su propia selección visual, 
-            // pero aquí centralizamos el valor de la apuesta global.
             const valor = parseInt(chip.dataset.valor || chip.textContent);
             window.apuestaTotalGlobal += valor;
             window.actualizarDisplaysGlobal();
@@ -48,23 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (apiGame === 'blackjack' && window.BJ && window.BJ.rondaActiva) return;
         
         window.apuestaTotalGlobal = 0;
-        // Si hay una función de limpieza específica en ruleta.js, se puede disparar aquí
         if (apiGame === 'roulette' && typeof window.limpiarApuestasVisuales === 'function') {
             window.limpiarApuestasVisuales();
         }
         window.actualizarDisplaysGlobal();
     });
 
-    // --- Botón Principal (Repartir / Jugar) ---
-    // Nota: En ruleta.html el botón de jugar suele tener id "btn-doblar" o "btn-repartir"
-    // Dependiendo de tu HTML, este listener asegura que Blackjack use su lógica de sockets.
+    // --- Boton Principal (Repartir / Jugar) ---
     $('btn-repartir')?.addEventListener('click', async () => {
         if (window.apuestaTotalGlobal <= 0) return;
 
         if (apiGame === 'blackjack') {
             if (window.BJ?.rondaActiva) return;
             
-            // Lógica de cobro para Blackjack antes de iniciar ronda
+            // Logica de cobro para Blackjack antes de iniciar ronda
             const res = await apiFetch('/api/wallet/bet', {
                 method: 'POST',
                 body: JSON.stringify({ amount: window.apuestaTotalGlobal, game: apiGame, lobbyId }),
@@ -82,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Lógica de Botones de Acción (Solo Blackjack) ---
+    // --- Logica de botones de blackjack ---
     $('btn-doblar')?.addEventListener('click', () => {
         if (apiGame === 'blackjack') {
             window.BJ?.pedirCarta();
@@ -95,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Callback de Fin de Ronda (Blackjack) ---
+    // --- Callback de Fin de Ronda para (Bj) ---
     window._onBJFinRonda = async (data) => {
         const socketId = window.BJ?.socketId;
         const miResultado = data.resultados[socketId];
@@ -133,13 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
         window.actualizarDisplaysGlobal();
     };
 
-    // --- Utilidades Generales ---
+    // salir de la mesa
     $('btn-salir-confirmar')?.addEventListener('click', async () => {
         if (typeof salirDeMesaActiva === 'function') await salirDeMesaActiva();
         window.location.href = '/mesas';
     });
 
-    // Timer de sesión
+    // Timer de sesion
     let sec = 0;
     setInterval(() => {
         sec++;

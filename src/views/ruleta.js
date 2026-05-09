@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const lobbyId = new URLSearchParams(window.location.search).get('mesa') || localStorage.getItem('mesaActiva');
 
-            // 1. COBRAR LA APUESTA AL SERVER
+            
             const resBet = await apiFetch('/api/wallet/bet', {
                 method: 'POST',
                 body: JSON.stringify({ amount: window.apuestaTotalGlobal, game: 'roulette', lobbyId }),
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const statusMsg = document.querySelector('.status-msg');
             statusMsg.innerText = "¡Girando!";
 
-            // 2. GENERAR RESULTADO
+            
             const opciones = ["0", "00", ...Array.from({length: 36}, (_, i) => (i + 1).toString())];
             const ganador = opciones[Math.floor(Math.random() * opciones.length)];
 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     premioTotal += calcularPremio(idCasilla, ganador, monto);
                 });
 
-                // 3. PAGAR PREMIO SI GANÓ
+                
                 if (premioTotal > 0) {
                     const resWin = await apiFetch('/api/wallet/win', {
                         method: 'POST',
@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const n = parseInt(numGanador);
         const rojos = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
         
-        // CORRECCIÓN LÓGICA NEGRO: Si no es rojo, ni 0, ni 00, es negro.
         const esRojo = rojos.includes(n);
         const esNegro = !esRojo && numGanador !== "0" && numGanador !== "00";
 
