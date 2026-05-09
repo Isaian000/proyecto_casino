@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (resWin?.ok) {
                         const d = await resWin.json();
                         window.actualizarDisplaysGlobal(d.balance ?? d.bank);
-                        alert(`¡Ganaste €${premioTotal}!`);
+                        alert(`¡Ganaste MXN${premioTotal}!`);
                     }
                 } else {
                     alert("Suerte para la próxima");
