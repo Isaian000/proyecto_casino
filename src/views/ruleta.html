@@ -142,12 +142,10 @@
                     <div class="bet-item">3rd 12</div>
                 </div>
                 <div class="bet-row externas">
-                    <div class="bet-item">1 to 18</div>
-                    <div class="bet-item">EVEN</div>
-                    <div class="bet-item item--rojo"></div>
-                    <div class="bet-item item--negro"></div>
-                    <div class="bet-item">ODD</div>
-                    <div class="bet-item">19 to 36</div>
+                    <div class="bet-item" id="1 to 18">1 to 18</div>
+                    <div class="bet-item" id="EVEN">EVEN</div>
+                    <div class="bet-item item--rojo" id="rojo"></div> <div class="bet-item item--negro" id="negro"></div> <div class="bet-item" id="ODD">ODD</div>
+                    <div class="bet-item" id="19 to 36">19 to 36</div>
                 </div>
             </div>
 
@@ -163,19 +161,11 @@
                 <div class="bttns-container">
                     <button id="btn-doblar" class="btn-game">
                         <span class="icon">×2</span>
-                        <span class="text">PEDIR</span>
-                    </button>
-                    <button id="btn-repartir" class="btn-game">
-                        <span class="icon">🎴</span>
-                        <span class="text">REPARTIR</span>
+                        <span class="text">Jugar</span>
                     </button>
                     <button id="btn-borrar" class="btn-game">
                         <span class="icon">✕</span>
-                        <span class="text">BORRAR</span>
-                    </button>
-                    <button id="btn-atras" class="btn-game">
-                        <span class="icon">↩</span>
-                        <span class="text">PLANTARSE</span>
+                        <span class="text">Borrar</span>
                     </button>
                 </div>
             </div>
@@ -205,5 +195,6 @@
     <script src="/views/utils.js"></script>
     <script src="/views/socket-client.js"></script>
     <script src="/views/juego.js"></script>
+    <script src="/views/ruleta.js"></script>
 </body>
 </html>

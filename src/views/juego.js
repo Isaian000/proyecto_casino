@@ -1,95 +1,108 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Verificación de sesión
     if (!localStorage.getItem('token')) { window.location.href = '/login'; return; }
-    initNavbar(); initLogout();
+    if (typeof initNavbar === 'function') initNavbar(); 
+    if (typeof initLogout === 'function') initLogout();
 
-    const path   = window.location.pathname;
+    const path = window.location.pathname;
     const apiGame = path.includes('ruleta') ? 'roulette' : 'blackjack';
     const lobbyId = new URLSearchParams(window.location.search).get('mesa') || localStorage.getItem('mesaActiva');
 
     const $ = (id) => document.getElementById(id);
-    let apuesta = 0;
-    let apuestaConfirmada = 0;   // apuesta bloqueada al pulsar REPARTIR
+    
+    // Variables globales para comunicación entre archivos
+    window.apuestaTotalGlobal = 0;
+    let apuestaConfirmada = 0; // Para el flujo de Blackjack
 
-    function actualizarDisplays(saldo) {
+    // --- Función de Actualización de Interfaz ---
+    window.actualizarDisplaysGlobal = function(saldo) {
         if (saldo !== undefined) {
+            // Actualizar en el navbar y en la mesa
             if ($('saldo-display')) $('saldo-display').textContent = '$' + Number(saldo).toLocaleString();
-            if ($('saldo-mesa'))   $('saldo-mesa').textContent   = '€' + Number(saldo).toLocaleString();
+            if ($('saldo-mesa'))    $('saldo-mesa').textContent    = '€' + Number(saldo).toLocaleString();
             localStorage.setItem('saldo', String(saldo));
         }
-        if ($('apuesta-total')) $('apuesta-total').textContent = '€' + apuesta.toLocaleString();
-    }
+        
+        // Actualizar el monto de la apuesta actual
+        if ($('apuesta-total')) {
+            $('apuesta-total').textContent = '€' + window.apuestaTotalGlobal.toLocaleString();
+        }
+    };
 
-    // Fichas
+    // --- Manejo de Fichas ---
     document.querySelectorAll('.chip--item').forEach(chip => {
         chip.addEventListener('click', () => {
-            if (apiGame === 'blackjack' && BJ.rondaActiva) return;  // no cambiar apuesta durante ronda
-            apuesta += parseInt(chip.dataset.valor || chip.textContent);
-            actualizarDisplays();
+            // Si es Blackjack, no permitir cambiar apuesta si la ronda inició
+            if (apiGame === 'blackjack' && window.BJ && window.BJ.rondaActiva) return;
+
+            // En la Ruleta, el archivo ruleta.js maneja su propia selección visual, 
+            // pero aquí centralizamos el valor de la apuesta global.
+            const valor = parseInt(chip.dataset.valor || chip.textContent);
+            window.apuestaTotalGlobal += valor;
+            window.actualizarDisplaysGlobal();
         });
     });
 
+    // --- Botón Borrar ---
     $('btn-borrar')?.addEventListener('click', () => {
-        if (apiGame === 'blackjack' && BJ.rondaActiva) return;
-        apuesta = 0;
-        actualizarDisplays();
+        if (apiGame === 'blackjack' && window.BJ && window.BJ.rondaActiva) return;
+        
+        window.apuestaTotalGlobal = 0;
+        // Si hay una función de limpieza específica en ruleta.js, se puede disparar aquí
+        if (apiGame === 'roulette' && typeof window.limpiarApuestasVisuales === 'function') {
+            window.limpiarApuestasVisuales();
+        }
+        window.actualizarDisplaysGlobal();
     });
 
-    // ---- REPARTIR ----
+    // --- Botón Principal (Repartir / Jugar) ---
+    // Nota: En ruleta.html el botón de jugar suele tener id "btn-doblar" o "btn-repartir"
+    // Dependiendo de tu HTML, este listener asegura que Blackjack use su lógica de sockets.
     $('btn-repartir')?.addEventListener('click', async () => {
-        if (apuesta <= 0) return showToast('Selecciona una apuesta', 'warn');
+        if (window.apuestaTotalGlobal <= 0) return;
 
         if (apiGame === 'blackjack') {
-            if (BJ.rondaActiva) return showToast('La ronda ya está en curso', 'warn');
-            if (BJ.enEspera)    return showToast('Estás en espera. Entrarás a la próxima ronda.', 'warn');
-        }
+            if (window.BJ?.rondaActiva) return;
+            
+            // Lógica de cobro para Blackjack antes de iniciar ronda
+            const res = await apiFetch('/api/wallet/bet', {
+                method: 'POST',
+                body: JSON.stringify({ amount: window.apuestaTotalGlobal, game: apiGame, lobbyId }),
+            });
 
-        // Descontar la apuesta del saldo vía API
-        const res = await apiFetch('/api/wallet/bet', {
-            method: 'POST',
-            body: JSON.stringify({ amount: apuesta, game: apiGame, lobbyId }),
-        });
-
-        if (res && res.ok) {
-            const data = await res.json();
-            apuestaConfirmada = apuesta;
-            apuesta = 0;
-            actualizarDisplays(data.balance ?? data.bank);
-
-            if (apiGame === 'blackjack') {
-                BJ.iniciarRonda();
+            if (res && res.ok) {
+                const data = await res.json();
+                apuestaConfirmada = window.apuestaTotalGlobal;
+                window.apuestaTotalGlobal = 0;
+                window.actualizarDisplaysGlobal(data.balance ?? data.bank);
+                window.BJ.iniciarRonda();
             } else {
-                // Ruleta: placeholder hasta implementar RuletaEngine
-                const msg = document.querySelector('.status-msg');
-                if (msg) msg.innerText = 'Girando... (lógica de ruleta próximamente)';
-                showToast('Apuesta registrada. Lógica de ruleta próximamente.', 'info');
+                if (typeof showToast === 'function') showToast('Saldo insuficiente', 'error');
             }
-        } else {
-            showToast('Saldo insuficiente', 'error');
         }
     });
 
-    // ---- PEDIR (btn-doblar) ----
+    // --- Lógica de Botones de Acción (Solo Blackjack) ---
     $('btn-doblar')?.addEventListener('click', () => {
-        if (apiGame !== 'blackjack') return showToast('Acción no disponible en Ruleta', 'warn');
-        BJ.pedirCarta();
+        if (apiGame === 'blackjack') {
+            window.BJ?.pedirCarta();
+        }
     });
 
-    // ---- PLANTARSE (btn-atras) ----
     $('btn-atras')?.addEventListener('click', () => {
-        if (apiGame !== 'blackjack') return showToast('Acción no disponible en Ruleta', 'warn');
-        BJ.plantarse();
+        if (apiGame === 'blackjack') {
+            window.BJ?.plantarse();
+        }
     });
 
-    // ---- Resultado final (llamado por blackjack.js vía window._onBJFinRonda) ----
+    // --- Callback de Fin de Ronda (Blackjack) ---
     window._onBJFinRonda = async (data) => {
-        // data.resultados = { [socketId]: 'ganaste'|'perdiste'|'empate' }
-        const socketId = BJ.socketId;
+        const socketId = window.BJ?.socketId;
         const miResultado = data.resultados[socketId];
-        if (!miResultado) return;   // jugador estaba en espera
+        if (!miResultado) return;
 
         const msg = document.querySelector('.status-msg');
-        const pD  = data.puntosDealer;
-
+        
         if (miResultado === 'ganaste') {
             const ganancia = apuestaConfirmada * 2;
             if (msg) msg.innerText = '¡GANASTE!';
@@ -99,8 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (res?.ok) {
                 const d = await res.json();
-                actualizarDisplays(d.balance ?? d.bank);
-                showToast(`¡Ganaste €${ganancia}!`, 'success');
+                window.actualizarDisplaysGlobal(d.balance ?? d.bank);
             }
         } else if (miResultado === 'empate') {
             if (msg) msg.innerText = 'EMPATE';
@@ -110,22 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (res?.ok) {
                 const d = await res.json();
-                actualizarDisplays(d.balance ?? d.bank);
-                showToast('Empate: Apuesta devuelta', 'info');
+                window.actualizarDisplaysGlobal(d.balance ?? d.bank);
             }
         } else {
             if (msg) msg.innerText = 'PERDISTE';
-            showToast('Suerte para la próxima', 'warn');
         }
 
         apuestaConfirmada = 0;
-        apuesta = 0;
-        actualizarDisplays();
+        window.apuestaTotalGlobal = 0;
+        window.actualizarDisplaysGlobal();
     };
 
-    // ---- Salir de mesa ----
+    // --- Utilidades Generales ---
     $('btn-salir-confirmar')?.addEventListener('click', async () => {
-        await salirDeMesaActiva();
+        if (typeof salirDeMesaActiva === 'function') await salirDeMesaActiva();
         window.location.href = '/mesas';
     });
 
@@ -139,4 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             $('session-timer').textContent = `${m}:${s}`;
         }
     }, 1000);
+
+    // Inicializar displays con saldo de localStorage
+    window.actualizarDisplaysGlobal(localStorage.getItem('saldo'));
 });
