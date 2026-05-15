@@ -96,8 +96,8 @@ const httpServer = http.createServer(app);
 initSocket(httpServer);
 
 httpServer.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`Socket.io escuchando en ws://localhost:${PORT}`);
-    console.log(`Swagger UI disponible en http://localhost:${PORT}/api/docs`);
+    const url = process.env.APP_URL || `http://localhost:${PORT}`;
+    console.log(`Servidor corriendo en: ${url}`);
+    console.log(`Swagger UI disponible en: ${url}/api/docs`);
 });
 //
