@@ -30,11 +30,13 @@ configurePassport();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.set('trust proxy', 1);
 app.use(
     session({
         secret: env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
+        
         cookie: { secure: env.NODE_ENV === 'production', maxAge: 7 * 24 * 60 * 60 * 1000 },
     })
 );
