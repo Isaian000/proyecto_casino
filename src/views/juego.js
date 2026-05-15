@@ -30,14 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Manejo de Fichas ---
-    document.querySelectorAll('.chip--item').forEach(chip => {
-        chip.addEventListener('click', () => {
-            if (apiGame === 'blackjack' && window.BJ && window.BJ.rondaActiva) return;
-            const valor = parseInt(chip.dataset.valor || chip.textContent);
-            window.apuestaTotalGlobal += valor;
-            window.actualizarDisplaysGlobal();
+    if (apiGame === 'blackjack') {
+
+        document.querySelectorAll('.chip--item').forEach(chip => {
+
+            chip.addEventListener('click', () => {
+
+                if (window.BJ && window.BJ.rondaActiva) return;
+
+                const valor = parseInt(chip.dataset.valor || chip.textContent);
+
+                window.apuestaTotalGlobal += valor;
+                window.actualizarDisplaysGlobal();
+            });
+
         });
-    });
+
+    }
 
     // --- Botón Borrar ---
     $('btn-borrar')?.addEventListener('click', () => {
@@ -94,11 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const miResultado = data.resultados[socketId];
         if (!miResultado) return;
 
-        const msg = document.querySelector('.status-msg');
-        
         if (miResultado === 'ganaste') {
             const ganancia = apuestaConfirmada * 2;
-            if (msg) msg.innerText = '¡GANASTE!';
             const res = await apiFetch('/api/wallet/win', {
                 method: 'POST',
                 body: JSON.stringify({ amount: ganancia, game: apiGame, lobbyId }),
@@ -108,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.actualizarDisplaysGlobal(d.balance ?? d.bank);
             }
         } else if (miResultado === 'empate') {
-            if (msg) msg.innerText = 'EMPATE';
             const res = await apiFetch('/api/wallet/win', {
                 method: 'POST',
                 body: JSON.stringify({ amount: apuestaConfirmada, game: apiGame, lobbyId }),
@@ -117,8 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const d = await res.json();
                 window.actualizarDisplaysGlobal(d.balance ?? d.bank);
             }
-        } else {
-            if (msg) msg.innerText = 'PERDISTE';
         }
 
         apuestaConfirmada = 0;

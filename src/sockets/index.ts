@@ -2,6 +2,7 @@ import { Server as HTTPServer } from 'http';
 import { Server as IOServer, Socket } from 'socket.io';
 import { registerLobbySocket } from './lobby.socket';
 import { registerBlackjackSocket } from './blackjack.socket';
+import { registerRuletaSocket } from './ruleta.socket';
 
 let io: IOServer | null = null;
 
@@ -22,6 +23,7 @@ export function initSocket(httpServer: HTTPServer): IOServer {
 
         registerLobbySocket(io as IOServer, socket);
         registerBlackjackSocket(io as IOServer, socket);
+        registerRuletaSocket(io as IOServer, socket);
 
         socket.on('disconnect', (reason) => {
             console.log(`[socket] desconectado: ${socket.id} (${reason})`);

@@ -54,89 +54,220 @@
         </div>
     </div>
 
-    <div id="resultado-overlay" class="oculto"><div id="resultado-msg"></div></div>
+    <div id="resultado-overlay" class="oculto"><div id="resultado-msg" class=""></div></div>
     <canvas id="confetti-canvas"></canvas>
 
-    <main id="juego-main">
-        <section id="mesa">
-            <div class="mesa-blackjack">
-                <div class="mesa-info-container">
-                    <h1 class="mesa-tittle">BlackJack</h1>
-                    <p class="mesa-subtitle">El BlackJack paga 3 a 2</p>
-                </div>
-            
-                <div class="marcador-blackjack">
-                    <div class="puntos-box">
-                        <h3>Dealer: <span id="puntos-dealer">0</span></h3>
-                        <p id="secuencia-dealer" class="secuencia-numeros">Esperando...</p>
-                    </div>
-                    <div class="puntos-box">
-                        <h3>Jugador: <span id="puntos-jugador">0</span></h3>
-                        <p id="secuencia-jugador" class="secuencia-numeros">Esperando...</p>
-                    </div>
-                </div>
+ <main id="juego-main">
+    <section id="mesa">
 
-                <!-- Panel de jugadores en mesa (sincronizado vía socket) -->
-                <div id="panel-jugadores-wrap">
-                    <h4 class="panel-jugadores-titulo">👥 Jugadores en mesa</h4>
-                    <div id="panel-jugadores">
-                        <!-- Generado dinámicamente por blackjack.js -->
-                    </div>
-                </div>
-            
-                <div class="bets-container">
-                    <div id="circulo-apuesta" class="bet--item">
-                        <div class="stack-fichas"></div> 
-                    </div>
-                </div>
-            
-                <div class="chips-bttns-container">
-                    <div class="chip-container">
-                        <div class="chip--item item-1" data-valor="5">5</div>
-                        <div class="chip--item item-2" data-valor="10">10</div>
-                        <div class="chip--item item-3" data-valor="100">100</div>
-                        <div class="chip--item item-4" data-valor="500">500</div>
-                        <div class="chip--item item-5" data-valor="1000">1000</div>
-                    </div>
-                
-                    <div class="bttns-container">
-                        <button id="btn-doblar" class="btn-game">
-                            <span class="icon">×2</span>
-                            <span class="text">PEDIR</span>
-                        </button>
-                        <button id="btn-repartir" class="btn-game">
-                            <span class="icon">🎴</span>
-                            <span class="text">REPARTIR</span>
-                        </button>
-                        <button id="btn-borrar" class="btn-game">
-                            <span class="icon">✕</span>
-                            <span class="text">BORRAR</span>
-                        </button>
-                        <button id="btn-atras" class="btn-game">
-                            <span class="icon">↩</span>
-                            <span class="text">PLANTARSE</span>
-                        </button>
-                    </div>
-                </div>
-            
-                <div class="info-bet-container">
-                    <div class="info-column">
-                        <h2 class="info-label">SALDO DISPONIBLE</h2>
-                        <p class="info-value" id="saldo-mesa">€0.00</p>
-                    </div>
-                    <div class="info-column info-center">
-                        <p class="status-msg">Haga sus apuestas, por favor</p>
-                        <span class="game-version">Premium Blackjack</span>
-                    </div>
-                    <div class="info-column">
-                        <h2 class="info-label">APUESTA TOTAL</h2>
-                        <p class="info-value" id="apuesta-total">€0.00</p>
-                    </div>
-                </div>
+        <div class="mesa-blackjack">
+
+            <!-- TITULO -->
+            <div class="mesa-info-container">
+                <h1 class="mesa-tittle">BlackJack</h1>
+                <p class="mesa-subtitle">
+                    El BlackJack paga 3 a 2
+                </p>
             </div>
-        </section>
-    </main>
 
+            <!-- MARCADOR -->
+            <div class="marcador-blackjack">
+
+                <div class="puntos-box">
+                    <h3>
+                        Dealer:
+                        <span id="puntos-dealer">0</span>
+                    </h3>
+
+                    <p id="secuencia-dealer"
+                       class="secuencia-numeros">
+                        Esperando...
+                    </p>
+                </div>
+
+                <div class="puntos-box">
+                    <h3>
+                        Jugador:
+                        <span id="puntos-jugador">0</span>
+                    </h3>
+
+                    <p id="secuencia-jugador"
+                       class="secuencia-numeros">
+                        Esperando...
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- PANEL JUGADORES -->
+            <div id="panel-jugadores-wrap">
+
+                <h4 class="panel-jugadores-titulo">
+                    👥 Jugadores en mesa
+                </h4>
+
+                <div id="panel-jugadores">
+                    <!-- blackjack.js -->
+                </div>
+
+            </div>
+
+            <!-- CONTADOR -->
+            <div id="bj-contador" class="bj-contador">
+
+                <div class="bj-contador-label">
+                    LA RONDA INICIA EN
+                </div>
+
+                <div id="bj-contador-numero"
+                     class="bj-contador-numero">
+                    10
+                </div>
+
+            </div>
+
+            <!-- APUESTAS -->
+            <div class="bets-container">
+
+                <div id="circulo-apuesta"
+                     class="bet--item">
+
+                    <div class="stack-fichas"></div>
+
+                </div>
+
+            </div>
+
+            <!-- FICHAS Y BOTONES -->
+            <div class="chips-bttns-container">
+
+                <div class="chip-container">
+
+                    <div class="chip--item item-1"
+                         data-valor="5">
+                        5
+                    </div>
+
+                    <div class="chip--item item-2"
+                         data-valor="10">
+                        10
+                    </div>
+
+                    <div class="chip--item item-3"
+                         data-valor="100">
+                        100
+                    </div>
+
+                    <div class="chip--item item-4"
+                         data-valor="500">
+                        500
+                    </div>
+
+                    <div class="chip--item item-5"
+                         data-valor="1000">
+                        1000
+                    </div>
+
+                </div>
+
+                <!-- BOTONES -->
+                <div class="bttns-container">
+
+                    <button id="btn-doblar"
+                            class="btn-game">
+
+                        <span class="icon">☝️</span>
+
+                        <span class="text">
+                            PEDIR
+                        </span>
+
+                    </button>
+
+                    <button id="btn-repartir"
+                            class="btn-game">
+
+                        <span class="icon">♠️</span>
+
+                        <span class="text">
+                            REPARTIR
+                        </span>
+
+                    </button>
+
+                    <button id="btn-borrar"
+                            class="btn-game">
+
+                        <span class="icon">🧹</span>
+
+                        <span class="text">
+                            BORRAR
+                        </span>
+
+                    </button>
+
+                    <button id="btn-atras"
+                            class="btn-game">
+
+                        <span class="icon">👍</span>
+
+                        <span class="text">
+                            PLANTARSE
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- INFO INFERIOR -->
+            <div class="info-bet-container">
+
+                <div class="info-column">
+
+                    <h2 class="info-label">
+                        SALDO DISPONIBLE
+                    </h2>
+
+                    <p class="info-value"
+                       id="saldo-mesa">
+                        €0.00
+                    </p>
+
+                </div>
+
+                <div class="info-column info-center">
+
+                    <p class="status-msg">
+                        Haga sus apuestas, por favor
+                    </p>
+
+                    <span class="game-version">
+                        Premium Blackjack
+                    </span>
+
+                </div>
+
+                <div class="info-column">
+
+                    <h2 class="info-label">
+                        APUESTA TOTAL
+                    </h2>
+
+                    <p class="info-value"
+                       id="apuesta-total">
+                        €0.00
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+</main>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"

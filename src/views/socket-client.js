@@ -36,6 +36,9 @@
 
     socket.on('connect', () => {
         socket.emit('joinLobby', { lobbyId, userId, username });
+        // Notificar a otros scripts (ej. ruleta.js) que el socket ya está listo
+        window.casinoSocket = socket;
+        window.dispatchEvent(new Event('casinoSocketReady'));
     });
 
     socket.on('playerJoined', (data) => {
