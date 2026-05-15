@@ -19,7 +19,7 @@ import exchangeRoutes from './routes/exchange.routes';
 import docsRoutes from './routes/docs.routes';
 
 const app = express();
-const PORT = env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // Inicializa la BD y, una vez conectada, asegura las mesas (lobbies) base.
 connectDB().then(() => {
